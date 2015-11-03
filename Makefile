@@ -1,6 +1,6 @@
 # compiler and libraries
 CC=clang++
-OPTIONS= -std=c++11 
+OPTIONS= -std=c++11 -O2
 
 # folders of the project
 INCLUDE = ./include
@@ -34,6 +34,11 @@ wisard:
 	$(CC) -c $(SRC)/WiSARD.cpp  -o $(BUILD)/WiSARD.o $(OPTIONS) 
 	@echo "\n\n"
 
+sswisard:
+	@echo "COMPILING SS_WISARD: "
+	$(CC) -c $(SRC)/SS_WiSARD.cpp  -o $(BUILD)/SS_WiSARD.o $(OPTIONS) 
+	@echo "\n\n"
+
 main:
 	@echo "COMPILING MAIN: "
 	$(CC) -c $(SRC)/Main.cpp -o $(BUILD)/Main.o $(OPTIONS)
@@ -48,7 +53,7 @@ main:
 
 
 ############################# whole WiSARD #############################
-all: clean init memory discriminator wisard
+all: clean init memory discriminator wisard sswisard
 	$(CC) -c $(SRC)/Main.cpp -o $(BUILD)/Main.o $(OPTIONS) 
 	$(CC)  $(BUILD)/*.o  -o $(BUILD)/programa.exe $(OPTIONS) 
 	$(BUILD)/programa.exe

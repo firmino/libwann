@@ -7,7 +7,8 @@
 
 #include "../include/Memory.hpp"
 #include <math.h>
-
+#include <iostream>
+#include <unordered_map>
 
 using namespace std;
 
@@ -15,9 +16,13 @@ Memory::Memory(int numBits, bool isCummulative=true, bool ignoreZeroAddr=false)
 :numBits(numBits),isCummulative(isCummulative),ignoreZeroAddr(ignoreZeroAddr)
 {
 	numAddrs = pow(2, numBits);
-
+	/*
 	for(int i=0; i < numAddrs; i++)
+	{			
+		cout << i << "\n";
 		data[i] = 0;
+	}
+	*/
 }
 
 Memory::~Memory(void)
@@ -36,6 +41,8 @@ void Memory::addValue(int addr, int value=1)
 int Memory::getValue(int addr)
 {
 	if(ignoreZeroAddr && addr == 0)
+		return 0;
+	if(!data.count(addr))
 		return 0;
 
 	return data[addr];

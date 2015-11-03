@@ -14,8 +14,6 @@
 #include <string>
 #include <unordered_map>
 
-
-
 using namespace std;
 
 class WiSARD
@@ -35,6 +33,7 @@ class WiSARD
 		void createDiscriminator(string);
 		void fit(const vector< vector<int> > &X, const vector<string> &y);
 		unordered_map<string, int> predict(const vector<int> &retina);
+		float calculateConfidence(unordered_map<string, int> &);
 
 	private:
 		int retinaLength;
@@ -48,7 +47,6 @@ class WiSARD
 		unordered_map <string, Discriminator*> discriminators;
 		vector<int> memoryAddressMapping;
 
-		float calculateConfidence(unordered_map<string, int> &);
 };
 
 

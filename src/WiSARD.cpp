@@ -55,13 +55,15 @@ WiSARD::~WiSARD(void)
 
 void WiSARD::createDiscriminator(string discriminatorLabel)
 {
-	Discriminator disc(retinaLength, numBitsAddr, memoryAddressMapping, isCummulative, ignoreZeroAddr);
-	discriminators[discriminatorLabel] = &disc;
+	
+	discriminators[discriminatorLabel] = new Discriminator(retinaLength, numBitsAddr, memoryAddressMapping, isCummulative, ignoreZeroAddr);
+	
 }
 
 
 void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
+	
 	for(int i=0; i < y.size(); i++)
 	{
 		string label = y[i];
@@ -74,6 +76,7 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 	unordered_map<string, int> result;
 	unordered_map<string, vector<int> *> memoryResult;
 
+	
 	for (auto it = discriminators.begin(); it != discriminators.end(); ++it )
 	{
 		string label = it->first;

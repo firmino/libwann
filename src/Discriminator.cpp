@@ -8,6 +8,7 @@
 #include "../include/Discriminator.hpp"
 #include "../include/Memory.hpp"
 #include <cmath>
+#include <iostream>
 
 
 using namespace std;
@@ -25,6 +26,7 @@ Discriminator::Discriminator(int retinaLength,
 {
     numMemories = (int) ceil(((float)retinaLength)/numBits);
     bool hasRestMemory = ((retinaLength % numBits) > 0) ? true : false;
+
 
     if(! hasRestMemory)
     {
@@ -66,6 +68,7 @@ Memory Discriminator::getMemory(int addr)
 
 void Discriminator::addTrainning(const vector<int> &retina)
 {
+ 
     // each group of numBitsAddr is related with a memory
     for(int i=0; i < retinaLength; i+= numBitsAddr)
     {
@@ -80,20 +83,18 @@ void Discriminator::addTrainning(const vector<int> &retina)
 
         memories[memIndex].addValue(addr, 1);
     }
-
+ 
     //  the rest of the retina (when the retina length is not a multiple of number of bits of address)
     int restOfPositions = retinaLength % numBitsAddr;
     int addr = 0;
-
     for(int j=0; j< numBitsAddr; j++)
     {
         addr += pow(2,j) * retina[(retinaLength - restOfPositions)+j];
     }        
-
     int lastMemoryPosition = ceil(retinaLength/numBitsAddr);
     memories[lastMemoryPosition].addValue(addr, 1);
-    
 }
+
 
 vector<int> Discriminator::predict(const vector<int> &retina)
 {
@@ -114,7 +115,7 @@ vector<int> Discriminator::predict(const vector<int> &retina)
         result.push_back( memories[memIndex].getValue(addr) );
     }
 
-    //  the rest of the retina (when the retina length is not a multiple of number of bits of address)
+    //  the rest of the retina (when the retina length is not a multiple of number of bits of address)   
     int restOfPositions = retinaLength % numBitsAddr;
     int addr = 0;
     
@@ -125,6 +126,7 @@ vector<int> Discriminator::predict(const vector<int> &retina)
 
     int lastMemoryPosition = ceil(retinaLength/numBitsAddr);
     result.push_back( memories[lastMemoryPosition].getValue(addr) );
+
 
     return result;
 
