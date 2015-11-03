@@ -83,8 +83,8 @@ tuple<vector<vector<int>>, vector<string>, vector<vector<int>>, vector<vector<in
 
 int  main(void)
 {
-    ifstream input ("new_sts_cpp_X.csv");
-    ifstream annotation ("new_sts_cpp_y.csv");
+    ifstream input ("data/new_sts_cpp_X.csv");
+    ifstream annotation ("data/new_sts_cpp_y.csv");
     string line;
 
     std::vector<vector<int>> X;
