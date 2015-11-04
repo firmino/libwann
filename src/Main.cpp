@@ -78,9 +78,9 @@ tuple<vector<vector<int>>, vector<string>, vector<vector<int>>, vector<vector<in
     
     return make_tuple(X, y, Xun, testing_X, testing_y);
 }
-double getAccuracy(SS_WiSARD * ssw, vector<vector<int>> &testing_X, vector<string> &testing_y)
+float getAccuracy(SS_WiSARD * ssw, vector<vector<int>> &testing_X, vector<string> &testing_y)
 {
-    int count = 0;
+    float count = 0.0;
     int testing_size = testing_X.size();
 
     for(int k = 0; k < testing_size; k++)
@@ -101,13 +101,15 @@ double getAccuracy(SS_WiSARD * ssw, vector<vector<int>> &testing_X, vector<strin
             }
         }
         if(rightLabel == predictedLabel)
-            count++;
+            count += 1.0;
     }
-    return ((float) count)/testing_size;
+    float accuracy = count/testing_size;
+    return count/testing_size;
 }
 
 void crossover (vector<tuple<int, bool, float, bool, float>> &index, vector<float> &results, int num_survivers)
 {
+    cout << "starting crossover" << endl;
     std::map<float, int> lists;
     int population_size = index.size();
     std::map<float,int>::iterator it = lists.begin();
@@ -130,7 +132,6 @@ void crossover (vector<tuple<int, bool, float, bool, float>> &index, vector<floa
     array<float, 2> conf_threshold;
     array<bool, 2> ignoreZeros;
     array<float, 2> ss_threshold;
-
     int crossover_father = 0;
     int crossover_mother = 0;
     for(int i = 0; i < population_size; i++)
@@ -138,15 +139,13 @@ void crossover (vector<tuple<int, bool, float, bool, float>> &index, vector<floa
         lists.insert(std::pair<float,int>((-1)*results[i], i));
     }
     int i = 0;
-    for(it=lists.begin(); (it!=lists.end() || i == num_survivers); ++it)
+    for(it=lists.begin(); (it!=lists.end() && i != num_survivers); ++it)
     {
         new_index.push_back(index[it->second]);
         i++;
-
     }
     for(int i = 0; i < population_size - num_survivers; i++)
     {
-
         do
         {
             crossover_father = get_int(gen);
@@ -158,7 +157,7 @@ void crossover (vector<tuple<int, bool, float, bool, float>> &index, vector<floa
         aux_tuple = make_tuple(num_bits[get_zero_one(gen)], bleaching[get_zero_one(gen)], conf_threshold[get_zero_one(gen)], ignoreZeros[get_zero_one(gen)], ss_threshold[get_zero_one(gen)]);
         //mutation goes here
         if(get_real(gen) < mutation_rate)
-        {
+        {            
             switch(random_param_number(gen))
             {
                 case 0:
@@ -173,10 +172,10 @@ void crossover (vector<tuple<int, bool, float, bool, float>> &index, vector<floa
                     std::get<4>(aux_tuple) = get_real(gen);
             }
         }
-        new_index.push_back(aux_tuple);
-
+        new_index.push_back(aux_tuple);      
     }
     index = new_index;
+    cout << "ended crossover"<< endl;
 }
 
 int genetic_optimization(int generations, int init_pop, int num_survivers, int iter_number, int retinaLength, vector<vector<int>> &X, vector<string> y)
@@ -199,12 +198,9 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
     vector<vector<int>> input_Xun;
     vector<vector<int>> testing_X;
     vector<string> testing_y;
-
-    vector<float> results;
     ofstream exit_file;
     exit_file.open("./results/optResult.txt");
-
-
+    SS_WiSARD * ssw;
     std::vector<tuple<int, bool, float, bool, float>> params;
     tuple<int, bool, float, bool, float> best_params;
     int best_index;
@@ -215,10 +211,11 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
     for(int i = 0; i < generations; i++)
     {
         cout << "starting generation: " << i << endl;
-        results.clear();
+        vector<float> results;
         local_max = 0.0;
         for(int j = 0; j < init_pop; j++)
         {   
+            
             if(global_best_accuracy == 0.0) //first iteration :: get random params
             {
                 num_bits = get_int(gen);
@@ -233,15 +230,18 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
             {
                 tie(num_bits, bleaching, conf_threshold, ignoreZeros, ss_threshold) = params[j];
             }
-            SS_WiSARD * ssw = new SS_WiSARD(retinaLength, num_bits, {"-1", "1"}, bleaching, conf_threshold, ignoreZeros, ss_threshold);       
+            cout << "\tpop: " << j << " params: " << " | " << num_bits << " | " << bleaching << " | " << conf_threshold << " | " << ignoreZeros << " | " << ss_threshold << endl;                   
             sum = 0.0;
             for(int iteration = 0; iteration < iter_number; iteration++)
             {
+                delete(ssw);
+                ssw = new SS_WiSARD(retinaLength, num_bits, {"-1", "1"}, bleaching, conf_threshold, ignoreZeros, ss_threshold);
                 tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.1, 0.6, 0.3);
                 ssw->fit(input_X, input_Xun, input_y);
                 sum += getAccuracy(ssw, testing_X, testing_y);                
             }
-            accuracy = sum/iter_number; 
+            accuracy = sum/iter_number;
+            cout << "\t\t" << accuracy << endl;
             results.push_back(accuracy);
             if(accuracy > local_max)
             {
@@ -250,13 +250,17 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
             }
         }
         if(local_max > global_best_accuracy)
-        {
+        {   
+            cout << "\n" << endl;
             best_params = params[best_index];
             global_best_accuracy = local_max;
-            cout << "global_best_accuracy: " << global_best_accuracy << endl;
+            cout << "global_best_accuracy changed to: " << global_best_accuracy << endl;
             tie(num_bits, bleaching, conf_threshold, ignoreZeros, ss_threshold) = best_params;
+            cout << "best params: " << " | " << num_bits << " | " << bleaching << " | " << conf_threshold << " | " << ignoreZeros << " | " << ss_threshold << endl;
             exit_file << "accuracy: " << global_best_accuracy << ", num_bits: " << num_bits <<  ", bleaching: " << bleaching <<  ", conf_threshold: " << conf_threshold <<  ", ignoreZeros: " << ignoreZeros << ", ss_threshold: " << ss_threshold << "\n";
+            exit_file.flush();
         }
+        cout << "\n" << endl;
         crossover(params, results, num_survivers); 
     }
     exit_file.close();
@@ -297,7 +301,6 @@ int  main(void)
     annotation.close();
 
     int retinaLength = X[0].size();
-
     /*
     int numBitsAddr;
     vector<vector<int>> input_X;
@@ -305,11 +308,11 @@ int  main(void)
     vector<vector<int>> input_Xun;
     vector<vector<int>> testing_X;
     vector<string> testing_y;
-
+    
     //tuple<vector<vector<int>>, vector<string>, vector<vector<int>>, vector<vector<int>>, vector<string>> sampling = randomSubSampling(X, y, 0.1, 0.6, 0.3);
     tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.1, 0.6, 0.3);
     
-    SS_WiSARD w (retinaLength, 24, {"-1", "1"}, true, 0.0, true, 0.9278612484835791);
+    SS_WiSARD w (retinaLength, 9, {"-1", "1"}, false, 0.518796, false, 0.329818);
 
     clock_t tStart = clock();
     w.fit(input_X, input_Xun, input_y);
@@ -346,11 +349,13 @@ int  main(void)
     float acc = count/ ((float)testing_X.size());
     cout << "ACURACIA: "<< acc << "\n"; 
     */
-    int generations = 3; 
-    int init_pop = 10; 
-    int num_survivers = 4; 
-    int iter_number = 3;
+    
+    int generations = 40; 
+    int init_pop = 100; 
+    int num_survivers = 20; 
+    int iter_number = 20;
 
     genetic_optimization(generations, init_pop, num_survivers, iter_number, retinaLength, X, y);
+    
     return 0;            
 }

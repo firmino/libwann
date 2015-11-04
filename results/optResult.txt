@@ -1,1 +1,0 @@
-accuracy: 0.730706, num_bits: 18, bleaching: 0, conf_threshold: 0.306597, ignoreZeros: 0, ss_threshold: 0.55861
