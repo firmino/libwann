@@ -27,8 +27,8 @@ class Discriminator
 		
 		int getNumMemories(void);
 		vector<Memory> getMemories(void);
-		vector<int> getMapping(int addr);
-		Memory getMemory(int addr);
+		vector<int> getMapping(long addr);
+		Memory getMemory(long addr);
 		void addTrainning(const vector<int> &retina);
 		vector<int> predict(const vector<int> &retina);
 

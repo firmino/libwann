@@ -63,7 +63,6 @@ void WiSARD::createDiscriminator(string discriminatorLabel)
 
 void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
-	
 	for(int i=0; i < y.size(); i++)
 	{
 		string label = y[i];

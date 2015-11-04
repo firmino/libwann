@@ -33,12 +33,23 @@ int Memory::getMemorySize(void)
 	return numAddrs;
 }
 
-void Memory::addValue(int addr, int value=1)
+void Memory::addValue(long addr, int value=1)
 {
-	data[addr] = value;
+	
+	if(!data.count(addr))
+	{
+		
+		data[addr] = 1;
+	}
+	else
+	{
+		
+		data[addr] += value;
+	}
+	
 }
 
-int Memory::getValue(int addr)
+int Memory::getValue(long addr)
 {
 	if(ignoreZeroAddr && addr == 0)
 		return 0;

@@ -54,8 +54,9 @@ main:
 
 ############################# whole WiSARD #############################
 all: clean init memory discriminator wisard sswisard
-	$(CC) -c $(SRC)/Main.cpp -o $(BUILD)/Main.o $(OPTIONS) 
+	$(CC) -c $(SRC)/Main.cpp -o $(BUILD)/Main.o $(OPTIONS)
 	$(CC)  $(BUILD)/*.o  -o $(BUILD)/programa.exe $(OPTIONS) 
+	@echo "\n\n"
 	$(BUILD)/programa.exe
 	
 ######################################################################
