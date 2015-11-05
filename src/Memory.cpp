@@ -15,7 +15,7 @@ using namespace std;
 Memory::Memory(int numBits, bool isCummulative=true, bool ignoreZeroAddr=false)
 :numBits(numBits),isCummulative(isCummulative),ignoreZeroAddr(ignoreZeroAddr)
 {
-	numAddrs = pow(2, numBits);
+	numAddrs = (long) pow(2, numBits);
 }
 
 Memory::~Memory(void)
@@ -26,13 +26,12 @@ long Memory::getMemorySize(void)
 	return numAddrs;
 }
 
-void Memory::addValue(long addr, int value=1)
+void Memory::addValue(const long addr, int value=1)
 {	
-	if(addr < 0 || addr >= numAddrs)
+	if(addr < 0L || addr >= numAddrs)
 	{
 		cout << "invalid address to add value" << endl;
 		cout << "number of address: " << numAddrs << endl;
-		cout << "address: "<< addr << endl;
 		exit(-1);
 	}
 	if(!isCummulative)

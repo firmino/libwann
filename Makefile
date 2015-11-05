@@ -26,7 +26,7 @@ memory:
 	
 discriminator:
 	@echo "COMPILING DISCRIMINATOR: "
-	$(CC) -c $(SRC)/Discriminator.cpp  -o $(BUILD)/Discriminator.o $(OPTIONS) 
+	$(CC) -c $(SRC)/Discriminator.cpp -o $(BUILD)/Discriminator.o $(OPTIONS) 
 	@echo "\n\n"
 
 wisard: 

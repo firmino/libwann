@@ -39,13 +39,15 @@ Discriminator::Discriminator(int retinaLength,
 
     else
     {
-        for(int i=0; i<numMemories - 1; i++)
+        for(int i=0; i<numMemories-1; i++)
             memories.push_back(new Memory(numBits, isCummulative, ignoreZeroAddr));
 
         //the rest memory 
         memories.push_back(new Memory((retinaLength % numBits), isCummulative, ignoreZeroAddr));
     }
-    cout << memories.size() << endl;
+
+
+
 }
 
 Discriminator::~Discriminator(void)
@@ -61,12 +63,12 @@ vector<Memory *> Discriminator::getMemories()
     return memories;
 }
 
-vector<int> Discriminator::getMapping(long addr)
+vector<int> Discriminator::getMapping(int addr)
 {
     return memoryAddressMapping;
 }
 
-Memory * Discriminator::getMemory(long addr)
+Memory * Discriminator::getMemory(int addr)
 {
     return memories[addr];
 }
@@ -75,31 +77,27 @@ void Discriminator::addTrainning(const vector<int> &retina)
 {
     int memIndex;
     long addr;
-    long lastMemoryPosition;
+    int lastMemoryPosition;
     int restOfPositions;
+    int i, j;
+    long base;
     
     // each group of numBitsAddr is related with a memory
-    for(int i=0; i < retinaLength; i+= numBitsAddr)
+    for(i=0; i <= retinaLength-numBitsAddr; i+= numBitsAddr)
     {
-        addr = 0;
-        for(long j=0; j<numBitsAddr; j++)
+        addr = 0L;
+        base = 1L;
+        for(j=0; j<numBitsAddr; j++)
         {
             if(retina[i+j] != 0)
             {
-                addr += pow(2,j);
+                addr += base;
             }
+            base *= 2L;
         }
-        if(addr == 64)
-        {
-            cout << retinaLength << ": retinaLength" << endl;
-            cout << addr << ": addr" << endl;
-            //cout << restOfPositions << ": restOfPositions" << endl;
-            cout << memIndex << ": memIndex" << endl;
-            cout << memories[memIndex]->getMemorySize() << ": many memories address" << endl;
-        }
+
         memIndex = i / numBitsAddr;
-        memories[memIndex]->addValue(addr, 1);
-        //cout << "passou" << endl;
+        memories[memIndex]->addValue(0L, 1);
 
     }
     //  the rest of the retina (when the retina length is not a multiple of number of bits of address)
@@ -107,25 +105,20 @@ void Discriminator::addTrainning(const vector<int> &retina)
     restOfPositions = retinaLength % numBitsAddr;    
     if(restOfPositions != 0)
     {
-        cout << restOfPositions << ": restOfPositions" << endl;
-        cout << retinaLength << ": retinaLength" << endl;
-        addr = 0;
-        for(long j=0; j< restOfPositions; j++)
-        {
-            addr += pow(2,j) * retina[(retinaLength - restOfPositions - 1)+j];
-        }
-        if(addr == 64)
-        {
-            cout << retinaLength << ": retinaLength" << endl;
-            cout << addr << ": addr" << endl;
-            cout << restOfPositions << ": restOfPositions" << endl;
-            cout << memIndex << ": memIndex" << endl;
-        }
-        cout << addr << ": addr" << endl;
-        lastMemoryPosition = ceil(retinaLength/numBitsAddr);
 
-        cout << lastMemoryPosition << ": lastMemoryPosition" << endl;
-        memories[lastMemoryPosition]->addValue(addr, 1);
+        addr = 0L;
+        base = 1L;
+        for(int j=0; j< restOfPositions; j++)
+        {
+            if(retina[retinaLength - restOfPositions - 1 +j] != 0)
+            {
+                addr += (long) base;
+                
+            }
+            base *= 2L;
+        }
+        lastMemoryPosition = (int) ceil(retinaLength/numBitsAddr);
+        memories[lastMemoryPosition]->addValue(0L, 1);
     }
     
 
@@ -136,28 +129,28 @@ vector<int> Discriminator::predict(const vector<int> &retina)
     long addr;
     int memIndex;
     int restOfPositions;
-    long lastMemoryPosition;
+    int lastMemoryPosition;
 
     vector<int> result(numMemories);
     // each group of numBitsAddr is related with a memory
-    for(int i=0; i < retinaLength; i+= numBitsAddr)
+    for(int i=0; i <= retinaLength-numBitsAddr; i+= numBitsAddr)
     {
-        addr = 0;
-        for(long j=0; j<numBitsAddr; j++)
+        addr = 0L;
+        for(int j=0; j<numBitsAddr; j++)
         {
-            addr += pow(2,j) * retina[i+j];
-        }       
+            addr += (long) pow(2,j) * retina[i+j];
+        }
         memIndex = i / numBitsAddr;
         result.push_back( memories[memIndex]->getValue(addr) );
     }
     //  the rest of the retina (when the retina length is not a multiple of number of bits of address)   
     restOfPositions = retinaLength % numBitsAddr;
-    addr = 0;
+    addr = 0L;
     if(restOfPositions != 0)
     {
-        for(long j=0; j< restOfPositions; j++)
+        for(int j=0; j< restOfPositions; j++)
         {
-            addr += pow(2,j) * retina[(retinaLength - restOfPositions - 1)+j];
+            addr += (long) pow(2,j) * retina[(retinaLength - restOfPositions - 1)+j];
         }        
 
         lastMemoryPosition = ceil(retinaLength/numBitsAddr);

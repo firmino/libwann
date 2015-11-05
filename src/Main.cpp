@@ -190,7 +190,7 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
     std::random_device rd;
     std::mt19937 gen(rd());
     std::bernoulli_distribution get_bool(0.5);
-    std::uniform_int_distribution<> get_int(2, 32);
+    std::uniform_int_distribution<> get_int(2, 31);
     std::uniform_real_distribution<> get_real(0, 1);
 
     vector<vector<int>> input_X;
@@ -200,7 +200,7 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
     vector<string> testing_y;
     ofstream exit_file;
     exit_file.open("./results/optResult.txt");
-    SS_WiSARD * ssw;
+    SS_WiSARD * ssw=NULL;
     std::vector<tuple<int, bool, float, bool, float>> params;
     tuple<int, bool, float, bool, float> best_params;
     int best_index;
@@ -235,12 +235,11 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
             sum = 0.0;
             for(int iteration = 0; iteration < iter_number; iteration++)
             {
-                delete(ssw);
+            	if (ssw)
+                	delete(ssw);
                 ssw = new SS_WiSARD(retinaLength, num_bits, {"-1", "1"}, bleaching, conf_threshold, ignoreZeros, ss_threshold);
                 tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.1, 0.6, 0.3);
-                cout << "fitting" << endl;
                 ssw->fit(input_X, input_Xun, input_y);
-                cout << "predicting" << endl;
                 sum += getAccuracy(ssw, testing_X, testing_y);                
             }
             accuracy = sum/iter_number;
@@ -305,7 +304,7 @@ int  main(void)
 
     int retinaLength = X[0].size();
     
-    /*
+
     int numBitsAddr;
     vector<vector<int>> input_X;
     vector<string> input_y;
@@ -352,14 +351,13 @@ int  main(void)
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     float acc = count/ ((float)testing_X.size());
     cout << "ACURACIA: "<< acc << "\n"; 
-    */
     
-    int generations = 40; 
-    int init_pop = 100; 
-    int num_survivers = 20; 
-    int iter_number = 20;
+    // int generations = 40; 
+    // int init_pop = 100; 
+    // int num_survivers = 20; 
+    // int iter_number = 20;
 
-    genetic_optimization(generations, init_pop, num_survivers, iter_number, retinaLength, X, y);
+    // genetic_optimization(generations, init_pop, num_survivers, iter_number, retinaLength, X, y);
     
     return 0;            
 }

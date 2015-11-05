@@ -22,13 +22,13 @@ class Memory
 		~Memory(void);
 		
 		long getMemorySize(void);
-		void addValue(long addr, int value);
+		void addValue(const long addr, int value);
 		int getValue(long addr);
 
 	private:
 		unordered_map<long,int> data;
 		long numAddrs;
-		long numBits;
+		int numBits;
 		bool isCummulative;
 		bool ignoreZeroAddr;
 };
