@@ -34,6 +34,7 @@ class WiSARD
 		void fit(const vector< vector<int> > &X, const vector<string> &y);
 		unordered_map<string, int> predict(const vector<int> &retina);
 		float calculateConfidence(unordered_map<string, int> &);
+		Discriminator * getDiscriminator(string label);
 
 	private:
 		int retinaLength;

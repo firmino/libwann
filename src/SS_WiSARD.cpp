@@ -26,8 +26,9 @@ SS_WiSARD::SS_WiSARD(int retinaLength,
 					 bool ignoreZeroAddr,
 					 float ssThreshold)
 
-:retinaLength(retinaLength), 
+:retinaLength(retinaLength),
  numBitsAddr(numBitsAddr),
+ classes(classes),
  useBleaching(useBleaching),
  confidenceThreshold(confidenceThreshold),
  ignoreZeroAddr(ignoreZeroAddr),
@@ -36,7 +37,10 @@ SS_WiSARD::SS_WiSARD(int retinaLength,
  	wisard = new WiSARD(retinaLength, 
  						numBitsAddr,
  						useBleaching,
- 						confidenceThreshold, 
+ 						confidenceThreshold,
+ 						1,
+ 						true,
+ 						true,
  						ignoreZeroAddr);
  	for(int i = 0; i < classes.size(); i++)
  	{
@@ -45,13 +49,14 @@ SS_WiSARD::SS_WiSARD(int retinaLength,
 
  }
 SS_WiSARD::~SS_WiSARD(void)
-{}
+{
+	
+	delete wisard;
+
+}
 void SS_WiSARD::fit(const vector< vector<int> > &X, const vector< vector<int> > &Xun, const vector<string> &y)
  {
  		wisard->fit(X, y);
- 		vector< vector<int> > unlabeledTraining;
- 		vector<string> labels;
-
  		for(int i = 0; i < Xun.size(); i++)
  		{
  			int maxValue = -1;

@@ -19,14 +19,16 @@ Memory::Memory(int numBits, bool isCummulative=true, bool ignoreZeroAddr=false)
 }
 
 Memory::~Memory(void)
-{}
+{
+	data.clear();
+}
 
 long Memory::getMemorySize(void)
 {
 	return numAddrs;
 }
 
-void Memory::addValue(const long addr, int value=1)
+void Memory::addValue(const long addr, int value = 1)
 {	
 	if(addr < 0L || addr >= numAddrs)
 	{
@@ -42,7 +44,6 @@ void Memory::addValue(const long addr, int value=1)
 	{
 		if(!data.count(addr))
 		{
-			
 			data[addr] = value;
 		}
 		else

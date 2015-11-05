@@ -49,8 +49,16 @@ WiSARD::WiSARD(int retinaLength,
 }
 
 WiSARD::~WiSARD(void)
-{}
-
+{
+	for (auto it = discriminators.begin(); it != discriminators.end(); ++it )
+	{
+		delete it->second;
+	}
+}
+Discriminator * WiSARD::getDiscriminator(string label)
+{
+	return discriminators[label];
+}
 
 
 void WiSARD::createDiscriminator(string discriminatorLabel)
@@ -79,11 +87,9 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 	for (auto it = discriminators.begin(); it != discriminators.end(); ++it )
 	{
 		string label = it->first;
-
 		Discriminator *d = it->second;
-
 		vector<int> resultDisc = d->predict(retina);
-		
+	
 		int sumMemoriesValue = 0;
 		for(int i = 0; i < resultDisc.size(); i++)
 		{

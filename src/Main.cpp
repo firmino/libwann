@@ -1,5 +1,6 @@
-#include "../include/WiSARD.hpp"
 #include "../include/SS_WiSARD.hpp"
+#include "../include/WiSARD.hpp"
+
 
 
 #include <algorithm>
@@ -219,7 +220,6 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
             if(global_best_accuracy == 0.0) //first iteration :: get random params
             {
                 num_bits = get_int(gen);
-                num_bits = 32;
                 bleaching = get_bool(gen);
                 conf_threshold = get_real(gen);
                 ignoreZeros = get_bool(gen);
@@ -238,7 +238,7 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
             	if (ssw)
                 	delete(ssw);
                 ssw = new SS_WiSARD(retinaLength, num_bits, {"-1", "1"}, bleaching, conf_threshold, ignoreZeros, ss_threshold);
-                tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.1, 0.6, 0.3);
+                tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.8, 0.1, 0.1);
                 ssw->fit(input_X, input_Xun, input_y);
                 sum += getAccuracy(ssw, testing_X, testing_y);                
             }
@@ -304,60 +304,61 @@ int  main(void)
 
     int retinaLength = X[0].size();
     
-
-    int numBitsAddr;
-    vector<vector<int>> input_X;
-    vector<string> input_y;
-    vector<vector<int>> input_Xun;
-    vector<vector<int>> testing_X;
-    vector<string> testing_y;
+    // int numBitsAddr;
+    // vector<vector<int>> input_X;
+    // vector<string> input_y;
+    // vector<vector<int>> input_Xun;
+    // vector<vector<int>> testing_X;
+    // vector<string> testing_y;
     
-    //tuple<vector<vector<int>>, vector<string>, vector<vector<int>>, vector<vector<int>>, vector<string>> sampling = randomSubSampling(X, y, 0.1, 0.6, 0.3);
-    tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.1, 0.6, 0.3);
-    
-    SS_WiSARD w (retinaLength, 9, {"-1", "1"}, false, 0.518796, false, 0.329818);
+    // tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.85, 0.05, 0.1);
 
+    // WiSARD * w = new WiSARD(retinaLength, 
+	 		// 				32,
+	 		// 				true,
+	 		// 				0.0,
+	 		// 				1,
+	 		// 				true,
+	 		// 				true,
+	 		// 				true);
+
+    // w->createDiscriminator("1");
+    // w->createDiscriminator("-1");
+    // w->fit(input_X, input_y);
+    // int count = 0;
+
+    // for(int i =0; i < testing_X.size(); i++)
+    // {   
+
+    //     string rightLabel =  testing_y[i];
+    //     auto result = w->predict(testing_X[i]);
+    //     string predictedLabel = "";
+    //     int maxValue = -1;
+
+    //     for (auto it = result.begin(); it != result.end(); ++it )
+    //     {
+    //         string label = it->first;
+    //         int value = it->second;
+    //         if(value > maxValue)
+    //         {
+    //             predictedLabel = label;
+    //             maxValue = value;
+    //         }    
+    //     }
+
+    //     if(rightLabel == predictedLabel)
+    //         count++;        
+    // }
+    // float acc = count/ ((float)testing_X.size());
+    // cout << "ACURACIA: "<< acc << "\n"; 
+    
+    int generations = 40; 
+    int init_pop = 100; 
+    int num_survivers = 20; 
+    int iter_number = 20;
+
+    genetic_optimization(generations, init_pop, num_survivers, iter_number, retinaLength, X, y);
     clock_t tStart = clock();
-    w.fit(input_X, input_Xun, input_y);
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-    int count = 0;
-    tStart = clock();
-    for(int i =0; i < testing_X.size(); i++)
-    {   
-
-        string rightLabel =  testing_y[i];
-       
-        auto result = w.predict(testing_X[i]);
-     
-        string predictedLabel = "";
-        int maxValue = -1;
-
-        for (auto it = result.begin(); it != result.end(); ++it )
-        {
-            string label = it->first;
-            int value = it->second;
-            
-            if(value > maxValue)
-            {
-                predictedLabel = label;
-                maxValue = value;
-            }    
-        }
-
-        if(rightLabel == predictedLabel)
-            count++;        
-    }
-    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-    float acc = count/ ((float)testing_X.size());
-    cout << "ACURACIA: "<< acc << "\n"; 
-    
-    // int generations = 40; 
-    // int init_pop = 100; 
-    // int num_survivers = 20; 
-    // int iter_number = 20;
-
-    // genetic_optimization(generations, init_pop, num_survivers, iter_number, retinaLength, X, y);
-    
     return 0;            
 }

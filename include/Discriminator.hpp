@@ -7,11 +7,9 @@
 
 #ifndef DISCRIMINATOR_HPP_
 #define DISCRIMINATOR_HPP_
-
 #include "./Memory.hpp"
-
 #include <vector>
-
+ 
 using namespace std;
 
 class Discriminator

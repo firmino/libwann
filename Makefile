@@ -1,6 +1,6 @@
 # compiler and libraries
 CC=clang++
-OPTIONS= -std=c++11 -O2
+OPTIONS= -std=c++11 -g -O2
 
 # folders of the project
 INCLUDE = ./include

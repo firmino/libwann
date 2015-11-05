@@ -37,10 +37,13 @@ class SS_WiSARD
 	private:
 		int retinaLength;
 		int numBitsAddr;
+		vector<string> classes;
 		bool useBleaching;
 		float confidenceThreshold;
 		bool ignoreZeroAddr;
 		float ssThreshold;
+		vector< vector<int> > unlabeledTraining;
+ 		vector<string> labels;
 		WiSARD *wisard;
 
 };
