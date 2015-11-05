@@ -73,12 +73,18 @@ void Discriminator::addTrainning(const vector<int> &retina)
     for(int i=0; i < retinaLength; i+= numBitsAddr)
     {
         long addr = 0;
-
-        for(int j=0; j<numBitsAddr; j++)
+        //cout << "valor numBitsAddr: " << numBitsAddr << endl;
+        for(long j=0; j<numBitsAddr; j++)
         {
-            addr += pow(2,j) * retina[i+j];
-        }       
+            //cout << "retina[i+j]: " << retina[i+j] << " addr+= " << addr << endl;
+            if(retina[i+j] != 0)
+            {
+                addr += pow(2,j);
+            }
+        }
+        //cout << "valor addr: " << addr << endl;
         int memIndex = i / numBitsAddr;
+        //cout << "valor memIndex: " << memIndex << endl;
         memories[memIndex].addValue(addr, 1);
     }
  
