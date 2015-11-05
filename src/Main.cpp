@@ -219,6 +219,7 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
             if(global_best_accuracy == 0.0) //first iteration :: get random params
             {
                 num_bits = get_int(gen);
+                num_bits = 32;
                 bleaching = get_bool(gen);
                 conf_threshold = get_real(gen);
                 ignoreZeros = get_bool(gen);
@@ -237,11 +238,13 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
                 delete(ssw);
                 ssw = new SS_WiSARD(retinaLength, num_bits, {"-1", "1"}, bleaching, conf_threshold, ignoreZeros, ss_threshold);
                 tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.1, 0.6, 0.3);
+                cout << "fitting" << endl;
                 ssw->fit(input_X, input_Xun, input_y);
+                cout << "predicting" << endl;
                 sum += getAccuracy(ssw, testing_X, testing_y);                
             }
             accuracy = sum/iter_number;
-            cout << "\t\t" << accuracy << endl;
+            cout << "\t\tAccuracy:  " << accuracy << endl;
             results.push_back(accuracy);
             if(accuracy > local_max)
             {
@@ -301,6 +304,7 @@ int  main(void)
     annotation.close();
 
     int retinaLength = X[0].size();
+    
     /*
     int numBitsAddr;
     vector<vector<int>> input_X;

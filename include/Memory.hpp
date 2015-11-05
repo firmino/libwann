@@ -21,19 +21,16 @@ class Memory
 		
 		~Memory(void);
 		
-		int getMemorySize(void);
+		long getMemorySize(void);
 		void addValue(long addr, int value);
 		int getValue(long addr);
 
 	private:
-		unordered_map<int,int> data;
+		unordered_map<long,int> data;
 		long numAddrs;
-		int numBits;
+		long numBits;
 		bool isCummulative;
 		bool ignoreZeroAddr;
-
-
-
 };
 
 #endif /* MEMORY_CPP_ */

@@ -16,41 +16,51 @@ Memory::Memory(int numBits, bool isCummulative=true, bool ignoreZeroAddr=false)
 :numBits(numBits),isCummulative(isCummulative),ignoreZeroAddr(ignoreZeroAddr)
 {
 	numAddrs = pow(2, numBits);
-	/*
-	for(int i=0; i < numAddrs; i++)
-	{			
-		cout << i << "\n";
-		data[i] = 0;
-	}
-	*/
 }
 
 Memory::~Memory(void)
 {}
 
-int Memory::getMemorySize(void)
+long Memory::getMemorySize(void)
 {
 	return numAddrs;
 }
 
 void Memory::addValue(long addr, int value=1)
-{
-	
-	if(!data.count(addr))
+{	
+	if(addr < 0 || addr >= numAddrs)
 	{
-		
+		cout << "invalid address to add value" << endl;
+		cout << "number of address: " << numAddrs << endl;
+		cout << "address: "<< addr << endl;
+		exit(-1);
+	}
+	if(!isCummulative)
+	{
 		data[addr] = 1;
 	}
 	else
 	{
-		
-		data[addr] += value;
+		if(!data.count(addr))
+		{
+			
+			data[addr] = value;
+		}
+		else
+		{
+			data[addr] += value;
+		}
 	}
 	
 }
-
 int Memory::getValue(long addr)
 {
+	if(addr < 0 || addr >= numAddrs)
+	{
+		cout << "invalid address to get value" << endl;
+		cout << "address: "<< addr << endl;
+		exit(-1);
+	}
 	if(ignoreZeroAddr && addr == 0)
 		return 0;
 	if(!data.count(addr))

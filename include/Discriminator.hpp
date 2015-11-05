@@ -26,9 +26,9 @@ class Discriminator
 		~Discriminator(void);
 		
 		int getNumMemories(void);
-		vector<Memory> getMemories(void);
+		vector<Memory *> getMemories(void);
 		vector<int> getMapping(long addr);
-		Memory getMemory(long addr);
+		Memory * getMemory(long addr);
 		void addTrainning(const vector<int> &retina);
 		vector<int> predict(const vector<int> &retina);
 
@@ -38,7 +38,7 @@ class Discriminator
 		int numMemories;
 		bool isCummulative;
 		bool ignoreZeroAddr;
-		vector<Memory> memories;
+		vector<Memory *> memories;
 		vector<int> memoryAddressMapping;
 
 };
