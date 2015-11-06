@@ -108,7 +108,7 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 		//apply bleaching
 		float confidence = calculateConfidence(result);
 		int b = defaultBleaching_b;
-		int counter = 0;
+		// int counter = 0;
 
 		// cout << "result before bleaching" << endl;
 		// for (auto it = result.begin(); it != result.end(); ++it )
@@ -139,11 +139,10 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 				result[label] = sumMemoriesValue;
 			}
 			
-			counter++;
 			b+=defaultBleaching_b;
 			confidence = calculateConfidence(result);
 		}
-		//cout << "entered " << counter << endl;
+		// cout << "entered " << counter << endl;
 		// cout << "result after bleaching" << endl;
 		// for (auto it = result.begin(); it != result.end(); ++it )
 		// {
@@ -168,13 +167,14 @@ float WiSARD::calculateConfidence(unordered_map<string, int> &result)
 	{
 		int value = it->second;
 
-		if (value > max)
+		if(max < value)
 		{
-			//secondMax = max;
 			max = value;
-		}	
-		if(value <= max && value >= secondMax )
+		}
+		else if(secondMax < value)
+		{
 			secondMax = value;
+		}
 	}
 	
 	float confidence = 1.0 - ( ( (float)secondMax )/max);

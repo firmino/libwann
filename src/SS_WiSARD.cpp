@@ -47,6 +47,7 @@ SS_WiSARD::SS_WiSARD(int retinaLength,
  	{
  		wisard->createDiscriminator(classes[i]);
  	}
+ 	unlabeledTraining_counter = 0;
 
  }
 SS_WiSARD::~SS_WiSARD(void)
@@ -64,6 +65,7 @@ void SS_WiSARD::fit(const vector< vector<int> > &X, const vector< vector<int> > 
  			string predictedLabel = "";
  			unordered_map<string, int> prediction = wisard->predict(Xun[i]);
  			float confidence = wisard->calculateConfidence(prediction);
+
  			if(confidence > ssThreshold)
  			{
  				for (auto it = prediction.begin(); it != prediction.end(); ++it )
@@ -77,6 +79,8 @@ void SS_WiSARD::fit(const vector< vector<int> > &X, const vector< vector<int> > 
 		                maxValue = value;
 		            }
 		        }
+		        unlabeledTraining_counter+=1;
+
 		        unlabeledTraining.push_back(Xun[i]);
 		        labels.push_back(predictedLabel);
  			}
@@ -86,4 +90,8 @@ void SS_WiSARD::fit(const vector< vector<int> > &X, const vector< vector<int> > 
 unordered_map<string, int> SS_WiSARD::predict(const vector<int> &retina)
 {
 	return wisard->predict(retina);
+}
+int SS_WiSARD::getNumberUnlabeledTrained()
+{
+	return unlabeledTraining_counter;
 }
