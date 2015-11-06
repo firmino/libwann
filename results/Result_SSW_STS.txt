@@ -1,0 +1,9 @@
+accuracy: 0.752709, num_bits: 15, bleaching: 1, conf_threshold: 0.00365177, ignoreZeros: 1, ss_threshold: 0.707786
+accuracy: 0.753914, num_bits: 21, bleaching: 1, conf_threshold: 0.0527021, ignoreZeros: 1, ss_threshold: 0.981692
+accuracy: 0.754406, num_bits: 21, bleaching: 1, conf_threshold: 0.0527021, ignoreZeros: 1, ss_threshold: 0.981692
+accuracy: 0.758456, num_bits: 9, bleaching: 1, conf_threshold: 0.0527021, ignoreZeros: 1, ss_threshold: 0.703166
+accuracy: 0.758675, num_bits: 9, bleaching: 1, conf_threshold: 0.0527021, ignoreZeros: 1, ss_threshold: 0.703166
+accuracy: 0.759004, num_bits: 9, bleaching: 1, conf_threshold: 0.0527021, ignoreZeros: 1, ss_threshold: 0.707786
+accuracy: 0.759004, num_bits: 9, bleaching: 1, conf_threshold: 0.00365177, ignoreZeros: 1, ss_threshold: 0.707786
+accuracy: 0.759551, num_bits: 9, bleaching: 1, conf_threshold: 0.00365177, ignoreZeros: 1, ss_threshold: 0.707786
+accuracy: 0.759715, num_bits: 9, bleaching: 1, conf_threshold: 0.00365177, ignoreZeros: 1, ss_threshold: 0.703166

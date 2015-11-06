@@ -270,8 +270,8 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
 }
 int  main(void)
 {
-    ifstream input ("data/new_sts_cpp_X.csv");
-    ifstream annotation ("data/new_sts_cpp_y.csv");
+    ifstream input ("data/imdb_cpp_X.csv");
+    ifstream annotation ("data/imdb_cpp_y.csv");
     string line;
 
     std::vector<vector<int>> X;
@@ -355,7 +355,7 @@ int  main(void)
     int generations = 40; 
     int init_pop = 100; 
     int num_survivers = 20; 
-    int iter_number = 20;
+    int iter_number = 30;
 
     genetic_optimization(generations, init_pop, num_survivers, iter_number, retinaLength, X, y);
     
