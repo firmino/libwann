@@ -169,6 +169,7 @@ float WiSARD::calculateConfidence(unordered_map<string, int> &result)
 
 		if(max < value)
 		{
+			secondMax = max;
 			max = value;
 		}
 		else if(secondMax < value)

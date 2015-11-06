@@ -304,60 +304,60 @@ int  main(void)
 
     int retinaLength = X[0].size();
     
-    int numBitsAddr;
-    vector<vector<int>> input_X;
-    vector<string> input_y;
-    vector<vector<int>> input_Xun;
-    vector<vector<int>> testing_X;
-    vector<string> testing_y;
+    // int numBitsAddr;
+    // vector<vector<int>> input_X;
+    // vector<string> input_y;
+    // vector<vector<int>> input_Xun;
+    // vector<vector<int>> testing_X;
+    // vector<string> testing_y;
     
-    tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.2, 0.5, 0.3);
-    ////9, bleaching: 0, conf_threshold: 0.0161234, ignoreZeros: 1, ss_threshold: 0.893476
-    SS_WiSARD * w = new SS_WiSARD(retinaLength, 9, {"-1", "1"}, true, 0.0161234, true, 0.001);
-    // WiSARD * w = new WiSARD(retinaLength, 8, true, 0.01, 1, true, true, true); //last is ignoreZero
+    // tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.2, 0.5, 0.3);
+    // ////9, bleaching: 0, conf_threshold: 0.0161234, ignoreZeros: 1, ss_threshold: 0.893476
+    // SS_WiSARD * w = new SS_WiSARD(retinaLength, 9, {"-1", "1"}, true, 0.0161234, true, 0.001);
+    // // WiSARD * w = new WiSARD(retinaLength, 8, true, 0.01, 1, true, true, true); //last is ignoreZero
     
-    // w->createDiscriminator("-1");
-    // w->createDiscriminator("1");
+    // // w->createDiscriminator("-1");
+    // // w->createDiscriminator("1");
     
-    clock_t tStart = clock();
-    w->fit(input_X, input_Xun, input_y);
-    cout << "trained with: " << w->getNumberUnlabeledTrained() << endl;
-    //w->fit(input_X, input_y);
-    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-    tStart = clock();
-    int count = 0;
-    for(int i =0; i < testing_X.size(); i++)
-    {   
+    // clock_t tStart = clock();
+    // w->fit(input_X, input_Xun, input_y);
+    // cout << "trained with: " << w->getNumberUnlabeledTrained() << endl;
+    // //w->fit(input_X, input_y);
+    // printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    // tStart = clock();
+    // int count = 0;
+    // for(int i =0; i < testing_X.size(); i++)
+    // {   
 
-        string rightLabel =  testing_y[i];
-        auto result = w->predict(testing_X[i]);
-        string predictedLabel = "";
-        int maxValue = -1;
+    //     string rightLabel =  testing_y[i];
+    //     auto result = w->predict(testing_X[i]);
+    //     string predictedLabel = "";
+    //     int maxValue = -1;
 
-        for (auto it = result.begin(); it != result.end(); ++it )
-        {
-            string label = it->first;
-            int value = it->second;
-            if(value > maxValue)
-            {
-                predictedLabel = label;
-                maxValue = value;
-            }    
-        }
-        if(rightLabel == predictedLabel)
-            count++;
-    }
-    float acc = count/ ((float)testing_X.size());
-    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    //     for (auto it = result.begin(); it != result.end(); ++it )
+    //     {
+    //         string label = it->first;
+    //         int value = it->second;
+    //         if(value > maxValue)
+    //         {
+    //             predictedLabel = label;
+    //             maxValue = value;
+    //         }    
+    //     }
+    //     if(rightLabel == predictedLabel)
+    //         count++;
+    // }
+    // float acc = count/ ((float)testing_X.size());
+    // printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-    cout << "ACURACIA: "<< acc << "\n"; 
+    // cout << "ACURACIA: "<< acc << "\n"; 
 
-    // int generations = 40; 
-    // int init_pop = 100; 
-    // int num_survivers = 20; 
-    // int iter_number = 20;
+    int generations = 40; 
+    int init_pop = 100; 
+    int num_survivers = 20; 
+    int iter_number = 20;
 
-    // genetic_optimization(generations, init_pop, num_survivers, iter_number, retinaLength, X, y);
+    genetic_optimization(generations, init_pop, num_survivers, iter_number, retinaLength, X, y);
     
-    // return 0;            
+    return 0;            
 }
