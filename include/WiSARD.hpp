@@ -45,6 +45,7 @@ class WiSARD
 		bool randomizePositions;
 		bool isCummulative;
 		bool ignoreZeroAddr;
+		unsigned seed;
 		unordered_map <string, Discriminator*> discriminators;
 		vector<int> memoryAddressMapping;
 

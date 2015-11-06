@@ -92,7 +92,7 @@ void Discriminator::addTrainning(const vector<int> &retina)
         base = 1L;
         for(int j=0; j < numBitsAddr; j++)
         {
-            if(retina[i+j] != 0)
+            if(retina[memoryAddressMapping[i+j]] != 0)
             {
                 addr += base;
             }
@@ -111,7 +111,7 @@ void Discriminator::addTrainning(const vector<int> &retina)
         base = 1L;
         for(int j=0; j< restOfPositions; j++)
         {
-            if(retina[retinaLength - restOfPositions - 1 +j] != 0)
+            if(retina[memoryAddressMapping[retinaLength - restOfPositions - 1 +j]] != 0)
             {
                 addr += (long) base;
             }
@@ -137,7 +137,7 @@ vector<int> Discriminator::predict(const vector<int> &retina)
         base = 1L;
         for(int j=0; j<numBitsAddr; j++)
         {
-            if(retina[i+j] != 0)
+            if(retina[memoryAddressMapping[i+j]] != 0)
             {
                 addr += (long) base;
             }
@@ -154,7 +154,7 @@ vector<int> Discriminator::predict(const vector<int> &retina)
     {
         for(int j=0; j< restOfPositions; j++)
         {
-            if(retina[retinaLength - restOfPositions - 1 + j] != 0)
+            if(retina[memoryAddressMapping[retinaLength - restOfPositions - 1 + j]] != 0)
             {
                 addr += (long) base;
             }

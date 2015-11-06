@@ -42,6 +42,7 @@ SS_WiSARD::SS_WiSARD(int retinaLength,
  						true,
  						true,
  						ignoreZeroAddr);
+ 	
  	for(int i = 0; i < classes.size(); i++)
  	{
  		wisard->createDiscriminator(classes[i]);

@@ -238,7 +238,7 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
             	if (ssw)
                 	delete(ssw);
                 ssw = new SS_WiSARD(retinaLength, num_bits, {"-1", "1"}, bleaching, conf_threshold, ignoreZeros, ss_threshold);
-                tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.8, 0.1, 0.1);
+                tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.2, 0.5, 0.3);
                 ssw->fit(input_X, input_Xun, input_y);
                 sum += getAccuracy(ssw, testing_X, testing_y);                
             }
@@ -311,22 +311,19 @@ int  main(void)
     // vector<vector<int>> testing_X;
     // vector<string> testing_y;
     
-    // tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.85, 0.05, 0.1);
-
-    // WiSARD * w = new WiSARD(retinaLength, 
-	 		// 				32,
-	 		// 				true,
-	 		// 				0.0,
-	 		// 				1,
-	 		// 				true,
-	 		// 				true,
-	 		// 				true);
-
-    // w->createDiscriminator("1");
+    // tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.69, 0.01, 0.3);
+    // //SS_WiSARD * w = new SS_WiSARD(retinaLength, 24, {"-1", "1"}, true, 0.01, false, 0.92);
+    // WiSARD * w = new WiSARD(retinaLength, 8, true, 0.01, 1, true, true, true); //last is ignoreZero
+    
     // w->createDiscriminator("-1");
+    // w->createDiscriminator("1");
+    
+    // clock_t tStart = clock();
+    // // w->fit(input_X, input_Xun, input_y);
     // w->fit(input_X, input_y);
+    // printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    // tStart = clock();
     // int count = 0;
-
     // for(int i =0; i < testing_X.size(); i++)
     // {   
 
@@ -345,20 +342,19 @@ int  main(void)
     //             maxValue = value;
     //         }    
     //     }
-
     //     if(rightLabel == predictedLabel)
-    //         count++;        
+    //         count++;
     // }
     // float acc = count/ ((float)testing_X.size());
+    // printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     // cout << "ACURACIA: "<< acc << "\n"; 
-    
+
     int generations = 40; 
     int init_pop = 100; 
     int num_survivers = 20; 
     int iter_number = 20;
 
     genetic_optimization(generations, init_pop, num_survivers, iter_number, retinaLength, X, y);
-    clock_t tStart = clock();
-    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    
     return 0;            
 }
