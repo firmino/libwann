@@ -31,4 +31,4 @@
 .project
 .cproject
 
-build
+*build/*

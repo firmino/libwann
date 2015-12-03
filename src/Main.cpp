@@ -15,6 +15,25 @@
 #include <chrono>
 #include <map>
 
+double Deviation(vector<float> v, float ave)
+{
+    double E=0;
+    // Quick Question - Can vector::size() return 0?
+    double inverse = 1.0 / static_cast<double>(v.size());
+    for(unsigned int i=0;i<v.size();i++)
+    {
+        E += pow(static_cast<double>(v[i]) - ave, 2);
+    }
+    return sqrt(inverse * E);
+}
+
+float Average(vector<float> v)
+{      float sum=0;
+       for(int i=0;i<v.size();i++)
+               sum+=v[i];
+       return sum/v.size();
+}
+
 using namespace std;
 vector<int> split(string str, char delimiter) {
     vector<int> internal;
@@ -126,7 +145,7 @@ void crossover (vector<tuple<int, bool, float, bool, float>> &index, vector<floa
 
     tuple<int, bool, float, bool, float> aux_tuple;
 
-    float mutation_rate = 0.001;
+    float mutation_rate = 0.01;
 
     array<int, 2> num_bits;
     array<bool, 2> bleaching;
@@ -200,7 +219,7 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
     vector<vector<int>> testing_X;
     vector<string> testing_y;
     ofstream exit_file;
-    exit_file.open("./results/optResult.txt");
+    exit_file.open("./results/optResult2.txt");
     SS_WiSARD * ssw=NULL;
     std::vector<tuple<int, bool, float, bool, float>> params;
     tuple<int, bool, float, bool, float> best_params;
@@ -303,61 +322,92 @@ int  main(void)
     annotation.close();
 
     int retinaLength = X[0].size();
+    cout << retinaLength << " :: NUMBER OF FEATURES" << endl;
     
-    // int numBitsAddr;
-    // vector<vector<int>> input_X;
-    // vector<string> input_y;
-    // vector<vector<int>> input_Xun;
-    // vector<vector<int>> testing_X;
-    // vector<string> testing_y;
+    int numBitsAddr;
+    vector<vector<int>> input_X;
+    vector<string> input_y;
+    vector<vector<int>> input_Xun;
+    vector<vector<int>> testing_X;
+    vector<string> testing_y;
+
+    vector<float> accuracies;
+    float acc;
+
+    SS_WiSARD * ssw;
+    WiSARD * w;
+
+    float duration;
+    vector<float> avg_fit_time;
+    vector<float> avg_predict_time;
     
-    // tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.2, 0.5, 0.3);
-    // ////9, bleaching: 0, conf_threshold: 0.0161234, ignoreZeros: 1, ss_threshold: 0.893476
-    // SS_WiSARD * w = new SS_WiSARD(retinaLength, 9, {"-1", "1"}, true, 0.0161234, true, 0.001);
-    // // WiSARD * w = new WiSARD(retinaLength, 8, true, 0.01, 1, true, true, true); //last is ignoreZero
-    
-    // // w->createDiscriminator("-1");
-    // // w->createDiscriminator("1");
-    
-    // clock_t tStart = clock();
-    // w->fit(input_X, input_Xun, input_y);
-    // cout << "trained with: " << w->getNumberUnlabeledTrained() << endl;
-    // //w->fit(input_X, input_y);
-    // printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-    // tStart = clock();
-    // int count = 0;
-    // for(int i =0; i < testing_X.size(); i++)
-    // {   
+    clock_t start;
+    for(int k = 0; k < 100; k++)
+    {
+        tie(input_X, input_y, input_Xun, testing_X, testing_y) = randomSubSampling(X, y, 0.2, 0.5, 0.3);
+        
+        //accuracy: 0.637349, num_bits: 9, bleaching: 0, conf_threshold: 0.31708, ignoreZeros: 0, ss_threshold: 0.918029
+        w = new WiSARD(retinaLength, 
+                        9,
+                        false,
+                        0.31708,
+                        1,
+                        true,
+                        true,
+                        false);
+        
+        w->createDiscriminator("-1");
+        w->createDiscriminator("1");
 
-    //     string rightLabel =  testing_y[i];
-    //     auto result = w->predict(testing_X[i]);
-    //     string predictedLabel = "";
-    //     int maxValue = -1;
+        start = std::clock();
+        // ssw = new SS_WiSARD(retinaLength, 26, {"-1", "1"}, true, 0.132994, true, 0.835635);
+        // ssw->fit(input_X, input_Xun, input_y);
+        w->fit(input_X, input_y);
+        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+        //cout << "\t\t fitting time: " << duration << endl;
+        avg_fit_time.push_back(duration);
+        int count = 0;
 
-    //     for (auto it = result.begin(); it != result.end(); ++it )
-    //     {
-    //         string label = it->first;
-    //         int value = it->second;
-    //         if(value > maxValue)
-    //         {
-    //             predictedLabel = label;
-    //             maxValue = value;
-    //         }    
-    //     }
-    //     if(rightLabel == predictedLabel)
-    //         count++;
-    // }
-    // float acc = count/ ((float)testing_X.size());
-    // printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+        start = std::clock();
+        for(int i =0; i < testing_X.size(); i++)
+        {   
+            string rightLabel =  testing_y[i];
+            //auto result = ssw->predict(testing_X[i]);
+            auto result = w->predict(testing_X[i]);
+            string predictedLabel = "";
+            int maxValue = -1;
+            for (auto it = result.begin(); it != result.end(); ++it )
+            {
+                string label = it->first;
+                int value = it->second;
+                if(value > maxValue)
+                {
+                    predictedLabel = label;
+                    maxValue = value;
+                }    
+            }
+            if(rightLabel == predictedLabel)
+                count++;
+        }
+        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+        //cout << "\t\t predicting time: " << duration << endl;
+        avg_predict_time.push_back(duration);
+        acc = count/ ((float)testing_X.size());
+        //cout << "ACURACIA: "<< acc << "\n"; 
+        accuracies.push_back(acc);
+    }
+    acc = Average(accuracies);
+    cout << "AVG: " << Average(accuracies) << endl;
+    cout << "STD: " << Deviation(accuracies, acc) << endl;
+    cout << "avg_fit_time: " << Average(avg_fit_time) << endl;
+    cout << "avg_predict_time: " << Average(avg_predict_time) << endl;
 
-    // cout << "ACURACIA: "<< acc << "\n"; 
+    // int generations = 40; 
+    // int init_pop = 100; 
+    // int num_survivers = 20; 
+    // int iter_number = 30;
 
-    int generations = 40; 
-    int init_pop = 100; 
-    int num_survivers = 20; 
-    int iter_number = 30;
-
-    genetic_optimization(generations, init_pop, num_survivers, iter_number, retinaLength, X, y);
+    // genetic_optimization(generations, init_pop, num_survivers, iter_number, retinaLength, X, y);
     
     return 0;            
 }
