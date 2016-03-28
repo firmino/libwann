@@ -1,7 +1,5 @@
-#include "../include/SS_WiSARD.hpp"
-#include "../include/WiSARD.hpp"
-
-
+#include <wann/SS_WiSARD.hpp>
+#include <wann/WiSARD.hpp>
 
 #include <algorithm>
 #include <iostream>
@@ -219,7 +217,7 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
     vector<vector<int>> testing_X;
     vector<string> testing_y;
     ofstream exit_file;
-    exit_file.open("./results/optResult2.txt");
+    exit_file.open("./test/results/optResult2.txt");
     SS_WiSARD * ssw=NULL;
     std::vector<tuple<int, bool, float, bool, float>> params;
     tuple<int, bool, float, bool, float> best_params;
@@ -289,8 +287,8 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
 }
 int  main(void)
 {
-    ifstream input ("data/imdb_cpp_X.csv");
-    ifstream annotation ("data/imdb_cpp_y.csv");
+    ifstream input ("test/data/imdb_cpp_X.csv");
+    ifstream annotation ("test/data/imdb_cpp_y.csv");
     string line;
 
     std::vector<vector<int>> X;

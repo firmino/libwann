@@ -5,11 +5,10 @@
  *      Author: fabio
  */
 
-
 #ifndef SS_WISARD_HPP_
 #define SS_WISARD_HPP_
 
-#include "../include/WiSARD.hpp"
+#include "./WiSARD.hpp"
 #include <algorithm>
 #include <iostream>
 #include <vector>
