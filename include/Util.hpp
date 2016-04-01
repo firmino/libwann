@@ -15,7 +15,7 @@
 using namespace std;
 
 
-namespace Util 
+namespace util 
 {
 		float calculateConfidence(unordered_map<string, int> &);
 }

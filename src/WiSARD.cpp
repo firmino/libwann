@@ -107,7 +107,7 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 	else
 	{
 		//apply bleaching
-		float confidence = Util::calculateConfidence(result);
+		float confidence = util::calculateConfidence(result);
 		int b = defaultBleaching_b;
 
 		while(confidence < confidenceThreshold)
@@ -129,7 +129,7 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 			}
 			
 			b+=defaultBleaching_b;
-			confidence = Util::calculateConfidence(result);
+			confidence = util::calculateConfidence(result);
 		}
 		
 		return result;

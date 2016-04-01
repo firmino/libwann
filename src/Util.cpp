@@ -8,7 +8,7 @@
 #include "../include/Util.hpp"
 
 
-float Util::calculateConfidence(unordered_map<string, int> &result)
+float util::calculateConfidence(unordered_map<string, int> &result)
 {
     int max = 0;
     int secondMax = 0;
