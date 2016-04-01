@@ -64,7 +64,7 @@ void SS_WiSARD::fit(const vector< vector<int> > &X, const vector< vector<int> > 
  			int maxValue = -1;
  			string predictedLabel = "";
  			unordered_map<string, int> prediction = wisard->predict(Xun[i]);
- 			float confidence = wisard->calculateConfidence(prediction);
+ 			float confidence = Util::calculateConfidence(prediction);
 
  			if(confidence > ssThreshold)
  			{

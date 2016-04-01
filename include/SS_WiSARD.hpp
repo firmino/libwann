@@ -9,6 +9,7 @@
 #define SS_WISARD_HPP_
 
 #include "./WiSARD.hpp"
+#include "./Util.hpp"
 #include <algorithm>
 #include <iostream>
 #include <vector>

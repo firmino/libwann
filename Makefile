@@ -16,6 +16,11 @@ init:
 clean:
 	rm -rf $(BUILD)
 
+util:
+	@echo "COMPILING UTIL: "
+	$(CC) -c $(SRC)/Util.cpp  -o $(BUILD)/Util.o $(OPTIONS) 
+	@echo "\n"
+
 memory:
 	@echo "COMPILING MEMORY: "
 	$(CC) -c $(SRC)/Memory.cpp  -o $(BUILD)/Memory.o $(OPTIONS) 
@@ -44,7 +49,7 @@ create_library:
 ###########################################################################
 
 ############################# whole libwisard #############################
-all: clean init memory discriminator wisard sswisard create_library
+all: clean init util memory discriminator wisard sswisard create_library
 
 ############################## moving libwisard for /usr/lob/lib###########
 install:

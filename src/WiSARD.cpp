@@ -7,6 +7,7 @@
 
 #include "../include/WiSARD.hpp"
 #include "../include/Discriminator.hpp"
+ #include "../include/Util.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -106,18 +107,9 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 	else
 	{
 		//apply bleaching
-		float confidence = calculateConfidence(result);
+		float confidence = Util::calculateConfidence(result);
 		int b = defaultBleaching_b;
-		// int counter = 0;
 
-		// cout << "result before bleaching" << endl;
-		// for (auto it = result.begin(); it != result.end(); ++it )
-		// {
-		// 	label = it->first;
-		// 	int s = it->second;
-		// 	cout << "class: " << label << " result: " << s << endl;
-			
-		// }
 		while(confidence < confidenceThreshold)
 		{
 			for (auto it = result.begin(); it != result.end(); ++it )
@@ -128,11 +120,8 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 				const std::vector<int> &labelResult = memoryResult[label];
 				for(int i = 0; i < labelResult.size(); i++)
 				{
-
 					if(labelResult[i] > b)
-					//if(memoryResult[label][i] > b)
 						sumMemoriesValue += 1;
-					
 				}
 				
 
@@ -140,46 +129,10 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 			}
 			
 			b+=defaultBleaching_b;
-			confidence = calculateConfidence(result);
+			confidence = Util::calculateConfidence(result);
 		}
-		// cout << "entered " << counter << endl;
-		// cout << "result after bleaching" << endl;
-		// for (auto it = result.begin(); it != result.end(); ++it )
-		// {
-		// 	label = it->first;
-		// 	int s = it->second;
-		// 	cout << "class: " << label << " result: " << s << endl;
-			
-		// }
-		// cout << "------" << endl;
-
+		
 		return result;
 	}
 
 }
-
-float WiSARD::calculateConfidence(unordered_map<string, int> &result)
-{
-	int max = 0;
-	int secondMax = 0;
-
-	for (auto it = result.begin(); it != result.end(); ++it )
-	{
-		int value = it->second;
-
-		if(max < value)
-		{
-			secondMax = max;
-			max = value;
-		}
-		else if(secondMax < value)
-		{
-			secondMax = value;
-		}
-	}
-	
-	float confidence = 1.0 - ( ( (float)secondMax )/max);
-	return confidence;
-}
-
-
