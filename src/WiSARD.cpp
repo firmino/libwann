@@ -7,7 +7,7 @@
 
 #include "../include/WiSARD.hpp"
 #include "../include/Discriminator.hpp"
- #include "../include/Util.hpp"
+#include "../include/Util.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -18,7 +18,7 @@
 
 
 using namespace std;
-
+using namespace wann;
 
 WiSARD::WiSARD(int retinaLength, 
 			   int numBitsAddr, 
@@ -56,19 +56,27 @@ WiSARD::~WiSARD(void)
 		delete it->second;
 	}
 }
-Discriminator * WiSARD::getDiscriminator(string label)
-{
-	return discriminators[label];
-}
+// Discriminator * WiSARD::getDiscriminator(string label)
+// {
+// 	return discriminators[label];
+// }
 
-void WiSARD::createDiscriminator(string discriminatorLabel)
-{
-	discriminators[discriminatorLabel] = new Discriminator(retinaLength, numBitsAddr, memoryAddressMapping, isCummulative, ignoreZeroAddr);
-}
+// void WiSARD::createDiscriminator(string discriminatorLabel)
+// {
+// 	discriminators[discriminatorLabel] = new Discriminator(retinaLength, numBitsAddr, memoryAddressMapping, isCummulative, ignoreZeroAddr);
+// }
 
 
 void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
+
+	// get unique values of each label
+	vector<string> labels(y);
+	sort(labels.begin(), labels.end());
+	labels.erase(unique(label.begin(), label.end()), label.end() );
+
+
+
 	for(int i=0; i < y.size(); i++)
 	{
 		string label = y[i];

@@ -16,39 +16,42 @@
 
 using namespace std;
 
-class WiSARD
+namespace wann
 {
-	public:
-		WiSARD(int retinaLength, 
-			   int numBitsAddr, 
-			   bool useBleaching=true, 
-			   float confidenceThreshold=0.1, 
-			   int defaultBleaching_b=1, 
-			   bool randomizePositions=true, 
-			   bool isCummulative=true, 
-			   bool ignoreZeroAddr=false);
 
-		~WiSARD(void);
+	class WiSARD
+	{
+		public:
+			WiSARD(int retinaLength, 
+				   int numBitsAddr, 
+				   bool useBleaching=true, 
+				   float confidenceThreshold=0.1, 
+				   int defaultBleaching_b=1, 
+				   bool randomizePositions=true, 
+				   bool isCummulative=true, 
+				   bool ignoreZeroAddr=false);
 
-		void createDiscriminator(string);
-		void fit(const vector< vector<int> > &X, const vector<string> &y);
-		unordered_map<string, int> predict(const vector<int> &retina);
-		Discriminator * getDiscriminator(string label);
+			~WiSARD(void);
 
-	private:
-		int retinaLength;
-		int numBitsAddr;
-		bool useBleaching;
-		float confidenceThreshold;
-		int defaultBleaching_b;
-		bool randomizePositions;
-		bool isCummulative;
-		bool ignoreZeroAddr;
-		unsigned seed;
-		unordered_map <string, Discriminator*> discriminators;
-		vector<int> memoryAddressMapping;
+			//void createDiscriminator(string);
+			void fit(const vector< vector<int> > &X, const vector<string> &y);
+			unordered_map<string, int> predict(const vector<int> &retina);
+			unordered_map<string, int> predictProba(const vector<int> &retina);
+			//Discriminator * getDiscriminator(string label);
 
-};
-
+		private:
+			int retinaLength;
+			int numBitsAddr;
+			bool useBleaching;
+			float confidenceThreshold;
+			int defaultBleaching_b;
+			bool randomizePositions;
+			bool isCummulative;
+			bool ignoreZeroAddr;
+			unsigned seed;
+			unordered_map <string, Discriminator*> discriminators;
+			vector<int> memoryAddressMapping;
+	};
+}
 
 #endif /* WISARD_HPP_ */

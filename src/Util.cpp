@@ -1,12 +1,13 @@
 /*
  * Discriminator.cpp
  *
- *  Created on: Oct 2, 2015
+ *  Created on: Apr 2, 2016
  *      Author: fabricio
  */
 
 #include "../include/Util.hpp"
 
+using namespace wann;
 
 float util::calculateConfidence(unordered_map<string, int> &result)
 {

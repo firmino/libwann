@@ -7,11 +7,12 @@
 
 #include "../include/Discriminator.hpp"
 #include "../include/Memory.hpp"
+
 #include <cmath>
 #include <iostream>
 
-
 using namespace std;
+using namespace wann;
 
 Discriminator::Discriminator(int retinaLength, 
                              int numBits,
@@ -44,9 +45,6 @@ Discriminator::Discriminator(int retinaLength,
         //the rest memory 
         memories.push_back(new Memory((retinaLength % numBits), isCummulative, ignoreZeroAddr));
     }
-
-
-
 }
 
 Discriminator::~Discriminator(void)
@@ -57,25 +55,6 @@ Discriminator::~Discriminator(void)
     }
 }
 
-int Discriminator::getNumMemories(void)
-{
-    return numMemories;
-}
-
-vector<Memory *> Discriminator::getMemories()
-{
-    return memories;
-}
-
-vector<int> Discriminator::getMapping(int addr)
-{
-    return memoryAddressMapping;
-}
-
-Memory * Discriminator::getMemory(int addr)
-{
-    return memories[addr];
-}
 
 void Discriminator::addTrainning(const vector<int> &retina)
 {
@@ -103,7 +82,6 @@ void Discriminator::addTrainning(const vector<int> &retina)
 
     }
     //  the rest of the retina (when the retina length is not a multiple of number of bits of address)
-
     restOfPositions = retinaLength % numBitsAddr;    
     if(restOfPositions != 0)
     {

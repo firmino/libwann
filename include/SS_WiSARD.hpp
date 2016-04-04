@@ -34,6 +34,7 @@ class SS_WiSARD
 		void fit(const vector< vector<int> > &X, const vector< vector<int> > &Xun, const vector<string> &y);
 		unordered_map<string, int> predict(const vector<int> &retina);
 		int getNumberUnlabeledTrained();
+
 	private:
 		int retinaLength;
 		int numBitsAddr;

@@ -14,10 +14,12 @@
 
 using namespace std;
 
-
-namespace util 
+namespace wann
 {
+	namespace util 
+	{
 		float calculateConfidence(unordered_map<string, int> &);
+	}
 }
 
 #endif /* UTIL_CPP_ */

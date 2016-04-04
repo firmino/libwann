@@ -14,23 +14,25 @@
 
 using namespace std;
 
-class Memory
+namespace wann
 {
-	public:
-		Memory(int numBits, bool isCummulative, bool ignoreZeroAddr);
-		
-		~Memory(void);
-		
-		long getMemorySize(void);
-		void addValue(const long addr, int value);
-		int getValue(long addr);
+	class Memory
+	{
+		public:
+			Memory(int numBits, bool isCummulative, bool ignoreZeroAddr);
+			~Memory(void);
+			
+			void addValue(const long addr, int value);
+			int getValue(long addr);
 
-	private:
-		unordered_map<long,int> data;
-		long numAddrs;
-		int numBits;
-		bool isCummulative;
-		bool ignoreZeroAddr;
-};
+		private:
+			unordered_map<long,int> data;
+			long numAddrs;
+			int numBits;
+			bool isCummulative;
+			bool ignoreZeroAddr;
+	};
+
+}
 
 #endif /* MEMORY_CPP_ */

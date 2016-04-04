@@ -11,6 +11,7 @@
 #include <unordered_map>
 
 using namespace std;
+using namespace wann;
 
 Memory::Memory(int numBits, bool isCummulative=true, bool ignoreZeroAddr=false)
 :numBits(numBits),isCummulative(isCummulative),ignoreZeroAddr(ignoreZeroAddr)
@@ -21,11 +22,6 @@ Memory::Memory(int numBits, bool isCummulative=true, bool ignoreZeroAddr=false)
 Memory::~Memory(void)
 {
 	data.clear();
-}
-
-long Memory::getMemorySize(void)
-{
-	return numAddrs;
 }
 
 void Memory::addValue(const long addr, int value = 1)
@@ -50,9 +46,9 @@ void Memory::addValue(const long addr, int value = 1)
 		{
 			data[addr] += value;
 		}
-	}
-	
+	}	
 }
+
 int Memory::getValue(long addr)
 {
 	if(addr < 0 || addr >= numAddrs)
