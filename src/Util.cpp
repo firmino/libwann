@@ -32,3 +32,41 @@ float util::calculateConfidence(unordered_map<string, int> &result)
     float confidence = 1.0 - ( ( (float)secondMax )/max);
     return confidence;
 }
+
+
+float util::maxValue(unordered_map<string, float> &values)
+{
+    int max = 0;
+    for (auto it = values.begin(); it != values.end(); ++it )
+    {
+        int value = it->second;
+        if(max < value)
+        {
+            max = value;
+        }
+    }
+
+    return max;
+}
+
+
+float util::argMax(unordered_map<string, float> &values)
+{
+    int max = 0;
+    string maxLabel = "";
+
+    for (auto it = values.begin(); it != values.end(); ++it )
+    {
+        int value = it->second;
+        if(max < value)
+        {
+            max = value;
+            maxLabel = it->first;
+        }
+    }
+
+    return maxLabel;
+}
+
+
+

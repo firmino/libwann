@@ -56,27 +56,28 @@ WiSARD::~WiSARD(void)
 		delete it->second;
 	}
 }
-// Discriminator * WiSARD::getDiscriminator(string label)
-// {
-// 	return discriminators[label];
-// }
-
-// void WiSARD::createDiscriminator(string discriminatorLabel)
-// {
-// 	discriminators[discriminatorLabel] = new Discriminator(retinaLength, numBitsAddr, memoryAddressMapping, isCummulative, ignoreZeroAddr);
-// }
 
 
 void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
-
 	// get unique values of each label
 	vector<string> labels(y);
 	sort(labels.begin(), labels.end());
-	labels.erase(unique(label.begin(), label.end()), label.end() );
+	labels.erase(unique(labels.begin(), labels.end()), labels.end() );
 
+	//creating discriminators
+	for(int i = 0; i < labels.size(); i++ )
+	{
+		string label = labels[i];
+		Discriminator d = Discriminator(retinaLength,
+										numBitsAddr, 
+										memoryAddressMapping, 
+										isCummulative, 
+										ignoreZeroAddr);
+		discriminators[label] = &d;
+	}	
 
-
+	//training discriminators
 	for(int i=0; i < y.size(); i++)
 	{
 		string label = y[i];
@@ -84,13 +85,17 @@ void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 	}	
 }
 
-unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
+unordered_map<string, float> WiSARD::predictProba(const vector<int> &retina)
 {
-	unordered_map<string, int> result;
-	unordered_map<string, vector<int>> memoryResult;
 	string label;
-	Discriminator * auxDisc;
+
+	unordered_map<string, float> result;
+	unordered_map<string, vector<int>> memoryResult;
+
+	Discriminator *auxDisc;
 	vector<int> memoryResultAux;
+
+	int numMemories = pow(2, numBitsAddr);
 	
 	for (auto it = discriminators.begin(); it != discriminators.end(); ++it )
 	{
@@ -104,7 +109,9 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 			if(memoryResultAux[i] > 0)
 				sumMemoriesValue += 1;
 		}
-		result[label] = sumMemoriesValue;
+
+		// to calc probability, what percentage of memories recognize the element;
+		result[label] = sumMemoriesValue / numMemories;
 		memoryResult[label] = memoryResultAux;
 	}
 
@@ -115,12 +122,15 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 	else
 	{
 		//apply bleaching
+		unordered_map<string, float> resultPrevious;
 		float confidence = util::calculateConfidence(result);
 		int b = defaultBleaching_b;
 
 		while(confidence < confidenceThreshold)
 		{
-			for (auto it = result.begin(); it != result.end(); ++it )
+			resultPrevious = copy(result);
+
+			for(auto it = result.begin(); it != result.end(); ++it )
 			{
 				label = it->first;
 				int sumMemoriesValue = 0;
@@ -132,15 +142,27 @@ unordered_map<string, int> WiSARD::predict(const vector<int> &retina)
 						sumMemoriesValue += 1;
 				}
 				
-
-				result[label] = sumMemoriesValue;
+				result[label] = sumMemoriesValue / numMemories;
 			}
 			
+			// if no memory recognize the pattern, return previous value
+			float maxValue = util::maxValue(result);
+			if(maxValue <= 0.0000001)  // if is zero
+				return resultPrevious;
+
 			b+=defaultBleaching_b;
 			confidence = util::calculateConfidence(result);
 		}
-		
+
 		return result;
 	}
+} 
 
+
+vector<string> WiSARD::predict(const vector<int> &retina)
+{
+	vector<string> vecRes;
+
+	unordered_map<string, float> result = predictProba(retina);
+	return util::argMax(result);
 }

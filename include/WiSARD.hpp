@@ -33,12 +33,10 @@ namespace wann
 
 			~WiSARD(void);
 
-			//void createDiscriminator(string);
 			void fit(const vector< vector<int> > &X, const vector<string> &y);
-			unordered_map<string, int> predict(const vector<int> &retina);
+			vector<string> predict(const vector<int> &retina);
 			unordered_map<string, int> predictProba(const vector<int> &retina);
-			//Discriminator * getDiscriminator(string label);
-
+			
 		private:
 			int retinaLength;
 			int numBitsAddr;

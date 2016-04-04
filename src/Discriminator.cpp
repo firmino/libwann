@@ -32,9 +32,7 @@ Discriminator::Discriminator(int retinaLength,
     if(!hasRestMemory)
     {
         for(int i=0; i<numMemories; i++)
-        {
             memories.push_back(new Memory(numBits, isCummulative, ignoreZeroAddr));
-        }
     }
 
     else
@@ -72,9 +70,8 @@ void Discriminator::addTrainning(const vector<int> &retina)
         for(int j=0; j < numBitsAddr; j++)
         {
             if(retina[memoryAddressMapping[i+j]] != 0)
-            {
                 addr += base;
-            }
+
             base *= 2L;
         }
         memIndex = i / numBitsAddr;
@@ -90,9 +87,8 @@ void Discriminator::addTrainning(const vector<int> &retina)
         for(int j=0; j< restOfPositions; j++)
         {
             if(retina[memoryAddressMapping[retinaLength - restOfPositions - 1 +j]] != 0)
-            {
                 addr += (long) base;
-            }
+
             base *= 2L;
         }
         lastMemoryPosition = (int) ceil(retinaLength/numBitsAddr);
@@ -116,9 +112,8 @@ vector<int> Discriminator::predict(const vector<int> &retina)
         for(int j=0; j<numBitsAddr; j++)
         {
             if(retina[memoryAddressMapping[i+j]] != 0)
-            {
                 addr += (long) base;
-            }
+
             base *= 2;
         }
         memIndex = i / numBitsAddr;
@@ -133,9 +128,8 @@ vector<int> Discriminator::predict(const vector<int> &retina)
         for(int j=0; j< restOfPositions; j++)
         {
             if(retina[memoryAddressMapping[retinaLength - restOfPositions - 1 + j]] != 0)
-            {
                 addr += (long) base;
-            }
+
             base *= 2;
         }
         lastMemoryPosition = ceil(retinaLength/numBitsAddr);
