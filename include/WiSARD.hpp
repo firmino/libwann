@@ -34,8 +34,8 @@ namespace wann
 			~WiSARD(void);
 
 			void fit(const vector< vector<int> > &X, const vector<string> &y);
-			vector<string> predict(const vector<int> &retina);
-			unordered_map<string, int> predictProba(const vector<int> &retina);
+			vector<string> predict(const vector< vector<int> > &X);
+			vector<unordered_map<string, float>> predictProba(const vector< vector<int> > &X);
 			
 		private:
 			int retinaLength;
@@ -49,6 +49,9 @@ namespace wann
 			unsigned seed;
 			unordered_map <string, Discriminator*> discriminators;
 			vector<int> memoryAddressMapping;
+
+			void applyBleaching(unordered_map<string, float> &result, const vector<int> &memoryResult);
+
 	};
 }
 
