@@ -16,7 +16,6 @@
 #include <chrono>
 #include <string>
 
-
 using namespace std;
 using namespace wann;
 
@@ -60,7 +59,7 @@ WiSARD::~WiSARD(void)
 
 void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
-	// get unique values of each label
+	// get unique labels
 	vector<string> labels(y);
 	sort(labels.begin(), labels.end());
 	labels.erase(unique(labels.begin(), labels.end()), labels.end() );

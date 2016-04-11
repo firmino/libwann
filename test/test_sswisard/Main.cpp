@@ -13,7 +13,11 @@
 #include <chrono>
 #include <map>
 
-double Deviation(vector<float> v, float ave)
+using namespace std;
+
+
+
+double deviation(vector<float> v, float ave)
 {
     double E=0;
     // Quick Question - Can vector::size() return 0?
@@ -25,14 +29,14 @@ double Deviation(vector<float> v, float ave)
     return sqrt(inverse * E);
 }
 
-float Average(vector<float> v)
+float average(vector<float> v)
 {      float sum=0;
        for(int i=0;i<v.size();i++)
                sum+=v[i];
        return sum/v.size();
 }
 
-using namespace std;
+
 vector<int> split(string str, char delimiter) {
     vector<int> internal;
     stringstream ss(str); // Turn the string into a stream.
@@ -57,7 +61,7 @@ vector<string> split_str(string str, char delimiter) {
     return internal;
 }
 
-//class tuple : public _Tuple_impl(vector<vector<int>>, vector<string>, vector<vector<int>>, vector<vector<int>>, vector<string>);
+
 
 tuple<vector<vector<int>>, vector<string>, vector<vector<int>>, vector<vector<int>>, vector<string>> randomSubSampling (vector<vector<int>> &input_X, vector<string> &input_y, float f_X, float f_Xun, float f_testing)
 {
@@ -96,6 +100,7 @@ tuple<vector<vector<int>>, vector<string>, vector<vector<int>>, vector<vector<in
     
     return make_tuple(X, y, Xun, testing_X, testing_y);
 }
+
 float getAccuracy(SS_WiSARD * ssw, vector<vector<int>> &testing_X, vector<string> &testing_y)
 {
     float count = 0.0;
@@ -218,7 +223,7 @@ int genetic_optimization(int generations, int init_pop, int num_survivers, int i
     vector<string> testing_y;
     ofstream exit_file;
     exit_file.open("./test/results/optResult2.txt");
-    SS_WiSARD * ssw=NULL;
+    SS_WiSARD *ssw=NULL;
     std::vector<tuple<int, bool, float, bool, float>> params;
     tuple<int, bool, float, bool, float> best_params;
     int best_index;
@@ -394,11 +399,11 @@ int  main(void)
         //cout << "ACURACIA: "<< acc << "\n"; 
         accuracies.push_back(acc);
     }
-    acc = Average(accuracies);
-    cout << "AVG: " << Average(accuracies) << endl;
-    cout << "STD: " << Deviation(accuracies, acc) << endl;
-    cout << "avg_fit_time: " << Average(avg_fit_time) << endl;
-    cout << "avg_predict_time: " << Average(avg_predict_time) << endl;
+    acc = average(accuracies);
+    cout << "AVG: " << average(accuracies) << endl;
+    cout << "STD: " << deviation(accuracies, acc) << endl;
+    cout << "avg_fit_time: " << average(avg_fit_time) << endl;
+    cout << "avg_predict_time: " << average(avg_predict_time) << endl;
 
     // int generations = 40; 
     // int init_pop = 100; 
