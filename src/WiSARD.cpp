@@ -160,6 +160,8 @@ void WiSARD::applyBleaching(unordered_map<string, float> &result, const vector<i
 
 	float confidence = util::calculateConfidence(result);
 
+
+
 	while(confidence < confidenceThreshold)
 	{
 		resultPrevious = copy(result);

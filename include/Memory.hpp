@@ -9,10 +9,8 @@
 #ifndef MEMORY_CPP_
 #define MEMORY_CPP_
 
-#include <string>
 #include <unordered_map>
 
-using namespace std;
 
 namespace wann
 {
@@ -26,7 +24,7 @@ namespace wann
 			int getValue(long addr);
 
 		private:
-			unordered_map<long,int> data;
+			std::unordered_map<long,int> data;
 			long numAddrs;
 			int numBits;
 			bool isCummulative;

@@ -11,7 +11,6 @@
 #include "./Memory.hpp"
 #include <vector>
  
-using namespace std;
 
 namespace wann
 {
@@ -20,14 +19,14 @@ namespace wann
 		public:
 			Discriminator(int retinaLength, 
 						  int numBits, 
-						  vector<int> memoryAddressMapping, 
+						  std::vector<int> memoryAddressMapping, 
 						  bool isCummulative = true, 
 						  bool ignoreZeroAddr = false);
 
 			~Discriminator(void);
 
-			void addTrainning(const vector<int> &retina);
-			vector<int> predict(const vector<int> &retina);
+			void addTrainning(const std::vector<int> &retina);
+			std::vector<int> predict(const std::vector<int> &retina);
 
 		private:
 			int retinaLength;
@@ -35,8 +34,8 @@ namespace wann
 			int numMemories;
 			bool isCummulative;
 			bool ignoreZeroAddr;
-			vector<Memory *> memories;
-			vector<int> memoryAddressMapping;
+			std::vector<Memory *> memories;
+			std::vector<int> memoryAddressMapping;
 
 			Memory * getMemory(int addr);
 	};

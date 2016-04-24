@@ -64,7 +64,3 @@ int Memory::getValue(long addr)
 
 	return data[addr];
 }
-
-
-
-
