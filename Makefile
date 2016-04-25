@@ -36,11 +36,6 @@ wisard:
 	$(CC) -c $(SRC)/WiSARD.cpp  -o $(BUILD)/WiSARD.o $(OPTIONS)
 	@echo "\n\n"
 
-sswisard:
-	@echo "COMPILING SS_WISARD: "
-	$(CC) -c $(SRC)/SS_WiSARD.cpp  -o $(BUILD)/SS_WiSARD.o $(OPTIONS)
-	@echo "\n\n"
-
 create_library: 
 	@echo "GENERATING DYNAMIC LIBRARY: "
 	$(CC) -shared $(BUILD)/*.o  -o $(BUILD)/libwann.so 
@@ -49,7 +44,7 @@ create_library:
 ###########################################################################
 
 ############################# whole libwisard #############################
-all: clean init util memory discriminator wisard sswisard create_library
+all: clean init util memory discriminator wisard  create_library
 
 ############################## moving libwisard for /usr/lob/lib###########
 install:
