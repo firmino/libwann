@@ -16,8 +16,8 @@
 #include <chrono>
 #include <string>
 
-using namespace std;
 using namespace wann;
+using namespace std;
 
 WiSARD::WiSARD(int retinaLength, 
 			   int numBitsAddr, 
@@ -125,21 +125,21 @@ vector<unordered_map<string, float>> WiSARD::predictProba(const vector< vector<i
 		}
 
 		if(useBleaching)
-			WiSARD::applyBleaching(result, memoryResult);	
+			WiSARD::applyBleaching(result, memoryResult);
 		
-		results.push_back(result):
+		results.push_back(result);
 	}	
 
-	return result;
+	return results;
 } 
 
 
 vector<string> WiSARD::predict(const vector< vector<int> > &X)
 {
 	vector<string> vecRes;
-	vector<unordered_map<string, float>>  results = predictProba(retina);
+	vector<unordered_map<string, float>>  results = WiSARD::predictProba(X);
 
-	for(int i=0; i< result.size(); i++)
+	for(int i=0; i< results.size(); i++)
 	{
 		unordered_map<string, float> result = results[i];
 		string resultLabel = util::argMax(result);
@@ -149,10 +149,11 @@ vector<string> WiSARD::predict(const vector< vector<int> > &X)
 	return vecRes;
 }
 
-
-void WiSARD::applyBleaching(unordered_map<string, float> &result, const vector<int> &memoryResult)
+void WiSARD::applyBleaching(unordered_map<string, float> &result,  unordered_map<string, vector<int>> &memoryResult)
 {
 	//apply bleaching
+	vector<int> labelResult;
+
 	unordered_map<string, float> resultPrevious;
 	int b = defaultBleaching_b;
 	int numMemories = pow(2, numBitsAddr);
@@ -160,22 +161,24 @@ void WiSARD::applyBleaching(unordered_map<string, float> &result, const vector<i
 
 	float confidence = util::calculateConfidence(result);
 
-
-
 	while(confidence < confidenceThreshold)
 	{
-		resultPrevious = copy(result);
 
+		resultPrevious = result;
+		
 		for(auto it = result.begin(); it != result.end(); ++it )
 		{
 			label = it->first;
 			int sumMemoriesValue = 0;
+		
 
-			const std::vector<int> &labelResult = memoryResult[label];
+			labelResult = memoryResult[label];
+
 			for(int i = 0; i < labelResult.size(); i++)
 			{
 				if(labelResult[i] > b)
 					sumMemoriesValue += 1;
+				cout << i << endl;
 			}
 
 			result[label] = sumMemoriesValue / numMemories;
@@ -189,8 +192,7 @@ void WiSARD::applyBleaching(unordered_map<string, float> &result, const vector<i
 			break;
 		}
 
-		b+=1;
+		b ++;
 		confidence = util::calculateConfidence(result);
 	}
-
 }

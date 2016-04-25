@@ -11,14 +11,14 @@ using namespace std;
 using namespace wann;
 
 
-float util::calculateConfidence(unordered_map<string, int> &result)
+float util::calculateConfidence(unordered_map<string, float> &result)
 {
     int max = 0;
     int secondMax = 0;
 
     for (auto it = result.begin(); it != result.end(); ++it )
     {
-        int value = it->second;
+        float value = it->second;
 
         if(max < value)
         {

@@ -50,7 +50,8 @@ namespace wann
 			unordered_map <string, Discriminator*> discriminators;
 			vector<int> memoryAddressMapping;
 
-			void applyBleaching(unordered_map<string, float> &, const vector<int> &);
+			void applyBleaching(unordered_map<string, float> &, unordered_map<string, vector<int>> &);
+
 
 	};
 }

@@ -17,9 +17,9 @@ namespace wann
 {
 	namespace util 
 	{
-		float calculateConfidence(std::unordered_map<std::string, int> &);
-		float maxValue(std::unordered_map<std::string, float> &);
-		std::string argMax(std::unordered_map<std::string, float>&v);
+		float calculateConfidence(std::unordered_map<std::string, float>&);
+		float maxValue(std::unordered_map<std::string, float>&);
+		std::string argMax(std::unordered_map<std::string, float>&);
 	}
 }
 
