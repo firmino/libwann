@@ -1,5 +1,4 @@
 #include <WiSARD>
-
 #include <algorithm>
 #include <iostream>
 #include <vector>

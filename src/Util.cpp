@@ -7,7 +7,9 @@
 
 #include "../include/Util.hpp"
 
+using namespace std;
 using namespace wann;
+
 
 float util::calculateConfidence(unordered_map<string, int> &result)
 {
@@ -50,7 +52,7 @@ float util::maxValue(unordered_map<string, float> &values)
 }
 
 
-float util::argMax(unordered_map<string, float> &values)
+string util::argMax(unordered_map<string, float> &values)
 {
     int max = 0;
     string maxLabel = "";

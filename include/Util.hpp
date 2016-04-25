@@ -12,13 +12,14 @@
 #include <string>
 #include <unordered_map>
 
-using namespace std;
 
 namespace wann
 {
 	namespace util 
 	{
-		float calculateConfidence(unordered_map<string, int> &);
+		float calculateConfidence(std::unordered_map<std::string, int> &);
+		float maxValue(std::unordered_map<std::string, float> &);
+		std::string argMax(std::unordered_map<std::string, float>&v);
 	}
 }
 
