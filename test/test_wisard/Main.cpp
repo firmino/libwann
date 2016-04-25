@@ -44,9 +44,6 @@ vector<string> split_str(string str, char delimiter)
     return internal;
 }
 
-
-
-
 tuple< vector<vector<int>>, vector<string>> loadData(string XFile, string yFile)
 {
  
