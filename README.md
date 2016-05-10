@@ -5,10 +5,10 @@ c++  Weightless Artificial Neural Network library
 
 ## How to Install
 
-1- git clone https://github.com/firmino/libwann
-2- cd libwann
-3- make all (necessary clang++)
-4- sudo make install
+1. git clone https://github.com/firmino/libwann
+2. cd libwann
+3. make all (necessary clang++)
+4. sudo make install
 
 ## How to Use
 
