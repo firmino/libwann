@@ -14,7 +14,6 @@
 #include <string>
 #include <unordered_map>
 
-using namespace std;
 
 namespace wann
 {
@@ -33,9 +32,9 @@ namespace wann
 
 			~WiSARD(void);
 
-			void fit(const vector< vector<int> > &, const vector<string> &);
-			vector<string> predict(const vector< vector<int> > &);
-			vector<unordered_map<string, float>> predictProba(const vector< vector<int> > &);
+			void fit(const std::vector< std::vector<int> > &, const std::vector<std::string> &);
+			std::vector<std::string> predict(const std::vector< std::vector<int> > &);
+			std::vector<std::unordered_map<std::string, float>> predictProba(const std::vector< std::vector<int> > &);
 			
 		private:
 			int retinaLength;
@@ -47,10 +46,10 @@ namespace wann
 			bool isCummulative;
 			bool ignoreZeroAddr;
 			unsigned seed;
-			unordered_map <string, Discriminator*> discriminators;
-			vector<int> memoryAddressMapping;
+			std::unordered_map <std::string, Discriminator*> discriminators;
+			std::vector<int> memoryAddressMapping;
 
-			void applyBleaching(unordered_map<string, float> &, unordered_map<string, vector<int>> &);
+			void applyBleaching(std::unordered_map<std::string, float> &, std::unordered_map<std::string, std::vector<int>> &);
 
 
 	};

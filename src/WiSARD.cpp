@@ -59,21 +59,24 @@ WiSARD::~WiSARD(void)
 
 void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
+
 	// get unique labels
 	vector<string> labels(y);
 	sort(labels.begin(), labels.end());
 	labels.erase(unique(labels.begin(), labels.end()), labels.end() );
 
+	
 	//creating discriminators
 	for(int i = 0; i < labels.size(); i++ )
 	{
 		string label = labels[i];
-		Discriminator d = Discriminator(retinaLength,
-										numBitsAddr, 
-										memoryAddressMapping, 
-										isCummulative, 
-										ignoreZeroAddr);
-		discriminators[label] = &d;
+	
+		Discriminator *d = new Discriminator(retinaLength,
+											 numBitsAddr, 
+											 memoryAddressMapping, 
+											 isCummulative, 
+											 ignoreZeroAddr);
+		discriminators[label] = d;
 	}	
 
 	//training discriminators
@@ -120,13 +123,15 @@ vector<unordered_map<string, float>> WiSARD::predictProba(const vector< vector<i
 			}
 
 			// to calc probability, what percentage of memories recognize the element;
-			result[label] = sumMemoriesValue / numMemories;
+			result[label] = (float)sumMemoriesValue / (float)numMemories;
 			memoryResult[label] = memoryResultAux;
 		}
 
+		
 		if(useBleaching)
 			WiSARD::applyBleaching(result, memoryResult);
-		
+
+
 		results.push_back(result);
 	}	
 
@@ -178,7 +183,6 @@ void WiSARD::applyBleaching(unordered_map<string, float> &result,  unordered_map
 			{
 				if(labelResult[i] > b)
 					sumMemoriesValue += 1;
-				cout << i << endl;
 			}
 
 			result[label] = sumMemoriesValue / numMemories;

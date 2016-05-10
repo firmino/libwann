@@ -48,7 +48,7 @@ all: clean init util memory discriminator wisard  create_library
 
 ############################## moving libwisard for /usr/lob/lib###########
 install:
-	rm /usr/local/lib/libwann.so
+	rm -f /usr/local/lib/libwann.so
 	rm -rf /usr/local/include/wann
 	mkdir /usr/local/include/wann
 

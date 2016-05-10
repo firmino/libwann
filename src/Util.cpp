@@ -13,8 +13,8 @@ using namespace wann;
 
 float util::calculateConfidence(unordered_map<string, float> &result)
 {
-    int max = 0;
-    int secondMax = 0;
+    float max = 0.0;
+    float secondMax = 0.0;
 
     for (auto it = result.begin(); it != result.end(); ++it )
     {
@@ -31,17 +31,17 @@ float util::calculateConfidence(unordered_map<string, float> &result)
         }
     }
     
-    float confidence = 1.0 - ( ( (float)secondMax )/max);
+    float confidence = 1.0 - (secondMax /max);
     return confidence;
 }
 
 
 float util::maxValue(unordered_map<string, float> &values)
 {
-    int max = 0;
+    float max = 0.0;
     for (auto it = values.begin(); it != values.end(); ++it )
     {
-        int value = it->second;
+        float value = it->second;
         if(max < value)
         {
             max = value;
@@ -54,12 +54,14 @@ float util::maxValue(unordered_map<string, float> &values)
 
 string util::argMax(unordered_map<string, float> &values)
 {
-    int max = 0;
+    float max = 0.0;
     string maxLabel = "";
 
     for (auto it = values.begin(); it != values.end(); ++it )
     {
-        int value = it->second;
+
+        float value = it->second;
+
         if(max < value)
         {
             max = value;
