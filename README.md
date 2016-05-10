@@ -14,6 +14,7 @@ c++  Weightless Artificial Neural Network library
 
 
 ### WiSARD Signature
+```c++
 
 WiSARD(int retinaLength, 
 	   int numBitsAddr, 
@@ -23,9 +24,12 @@ WiSARD(int retinaLength,
 	   bool randomizePositions=true, 
 	   bool isCummulative=true, 
 	   bool ignoreZeroAddr=false);
+```
 
 ### How to Use
 
+
+```c++
 // import and other stuffs
 
 
@@ -45,7 +49,7 @@ w->fit(input_X, input_y);
 
 vector<string> result = w->predict(testing_X);
 
-
+```
 
 
 
