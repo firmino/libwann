@@ -49,8 +49,8 @@ namespace wann
 			std::unordered_map <std::string, Discriminator*> discriminators;
 			std::vector<int> memoryAddressMapping;
 
-			std::unordered_map <std::string,float> applyBleaching(std::unordered_map<std::string,float> &, 
-																  std::unordered_map<std::string, std::vector<int>> &);
+			std::unordered_map <std::string,float> applyBleaching(std::unordered_map<std::string,float> &,
+				std::unordered_map<std::string, std::vector<int>> &);
 
 
 	};
