@@ -20,12 +20,12 @@ namespace wann
 			Memory(int numBits, bool isCummulative, bool ignoreZeroAddr);
 			~Memory(void);
 			
-			void addValue(const long addr, int value);
-			int getValue(long addr);
+			void addValue(const long long addr, int value);
+			int getValue(const long long addr);
 
 		private:
-			std::unordered_map<long,int> data;
-			long numAddrs;
+			std::unordered_map<long long, int> data;
+			long long numAddrs;
 			int numBits;
 			bool isCummulative;
 			bool ignoreZeroAddr;

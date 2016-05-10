@@ -13,10 +13,16 @@
 using namespace std;
 using namespace wann;
 
-Memory::Memory(int numBits, bool isCummulative=true, bool ignoreZeroAddr=false)
+Memory::Memory(int numBits, 
+			   bool isCummulative=true, 
+			   bool ignoreZeroAddr=false)
 :numBits(numBits),isCummulative(isCummulative),ignoreZeroAddr(ignoreZeroAddr)
 {
-	numAddrs = (long) pow(2, numBits);
+	if(numBits > 62)
+		cout << "WARNING: Representation overflow due to number of bits" << endl;
+
+	numAddrs = (long long)pow((long long)2, (long long)numBits);
+	
 }
 
 Memory::~Memory(void)
@@ -24,12 +30,12 @@ Memory::~Memory(void)
 	data.clear();
 }
 
-void Memory::addValue(const long addr, int value = 1)
+void Memory::addValue(const long long addr, int value = 1)
 {	
 	if(addr < 0L || addr >= numAddrs)
 	{
-		cout << "invalid address to add value" << endl;
-		cout << "number of address: " << numAddrs << endl;
+		cout << "WARNING: invalid address to add value" << endl;
+		cout << "WARNING: number of address: " << numAddrs << endl;
 		exit(-1);
 	}
 	if(!isCummulative)
@@ -49,12 +55,12 @@ void Memory::addValue(const long addr, int value = 1)
 	}	
 }
 
-int Memory::getValue(long addr)
+int Memory::getValue(const long long addr)
 {
 	if(addr < 0 || addr >= numAddrs)
 	{
-		cout << "invalid address to get value" << endl;
-		cout << "address: "<< addr << endl;
+		cout << "WARNING: invalid address to add value" << endl;
+		cout << "WARNING: number of address: " << numAddrs << endl;
 		exit(-1);
 	}
 	if(ignoreZeroAddr && addr == 0)

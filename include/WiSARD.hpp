@@ -34,7 +34,7 @@ namespace wann
 
 			void fit(const std::vector< std::vector<int> > &, const std::vector<std::string> &);
 			std::vector<std::string> predict(const std::vector< std::vector<int> > &);
-			std::vector<std::unordered_map<std::string, float>> predictProba(const std::vector< std::vector<int> > &);
+			std::vector<std::unordered_map<std::string, float>> predictProba(const std::vector<std::vector<int> > &);
 			
 		private:
 			int retinaLength;
@@ -49,7 +49,8 @@ namespace wann
 			std::unordered_map <std::string, Discriminator*> discriminators;
 			std::vector<int> memoryAddressMapping;
 
-			void applyBleaching(std::unordered_map<std::string, float> &, std::unordered_map<std::string, std::vector<int>> &);
+			std::unordered_map <std::string,float> applyBleaching(std::unordered_map<std::string,float> &, 
+																  std::unordered_map<std::string, std::vector<int>> &);
 
 
 	};

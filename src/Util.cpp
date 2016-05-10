@@ -42,7 +42,7 @@ float util::maxValue(unordered_map<string, float> &values)
     for (auto it = values.begin(); it != values.end(); ++it )
     {
         float value = it->second;
-        if(max < value)
+        if( (value - max) > 0.0001 ) 
         {
             max = value;
         }
@@ -62,7 +62,7 @@ string util::argMax(unordered_map<string, float> &values)
 
         float value = it->second;
 
-        if(max < value)
+        if(max <= value)
         {
             max = value;
             maxLabel = it->first;

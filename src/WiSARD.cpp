@@ -46,6 +46,7 @@ WiSARD::WiSARD(int retinaLength,
 		seed = chrono::system_clock::now().time_since_epoch().count();
 		shuffle(begin(memoryAddressMapping), end(memoryAddressMapping), default_random_engine(seed));
 	}
+	
 }
 
 WiSARD::~WiSARD(void)
@@ -61,9 +62,16 @@ void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
 
 	// get unique labels
-	vector<string> labels(y);
-	sort(labels.begin(), labels.end());
-	labels.erase(unique(labels.begin(), labels.end()), labels.end() );
+	vector<string> labels;
+	unordered_map <string, int> auxMap ;
+	for(int i = 0; i < y.size(); i++)
+	{
+		auxMap[y[i]] = 0; 
+	}
+	for(auto it = auxMap.begin(); it != auxMap.end(); ++it)
+	{
+		labels.push_back(it->first);
+	}
 
 	
 	//creating discriminators
@@ -91,7 +99,7 @@ void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 vector<unordered_map<string, float>> WiSARD::predictProba(const vector< vector<int> > &X)
 {
 	vector<unordered_map<string, float>> results;
-	int numMemories = pow(2, numBitsAddr);
+	int numMemories =  (int) ceil( (float)retinaLength/ (float) numBitsAddr );
 
 	//for each retina
 	for(int i=0; i < X.size(); i++)
@@ -126,11 +134,10 @@ vector<unordered_map<string, float>> WiSARD::predictProba(const vector< vector<i
 			result[label] = (float)sumMemoriesValue / (float)numMemories;
 			memoryResult[label] = memoryResultAux;
 		}
-
 		
-		if(useBleaching)
-			WiSARD::applyBleaching(result, memoryResult);
 
+		if(useBleaching)
+			result = WiSARD::applyBleaching(result, memoryResult);
 
 		results.push_back(result);
 	}	
@@ -148,35 +155,35 @@ vector<string> WiSARD::predict(const vector< vector<int> > &X)
 	{
 		unordered_map<string, float> result = results[i];
 		string resultLabel = util::argMax(result);
+
+
 		vecRes.push_back(resultLabel);
 	}
 
 	return vecRes;
 }
 
-void WiSARD::applyBleaching(unordered_map<string, float> &result,  unordered_map<string, vector<int>> &memoryResult)
+unordered_map<string, float> WiSARD::applyBleaching(unordered_map<string, float> &result,  unordered_map<string, vector<int>> &memoryResult)
 {
+	unordered_map<string, float> resultFinal = result;
+
 	//apply bleaching
 	vector<int> labelResult;
-
-	unordered_map<string, float> resultPrevious;
-	int b = defaultBleaching_b;
-	int numMemories = pow(2, numBitsAddr);
 	string label;
+	int b = defaultBleaching_b;
+	int numMemories = (int) ceil( (float)retinaLength/ (float) numBitsAddr );
+	
 
-	float confidence = util::calculateConfidence(result);
+	float confidence = util::calculateConfidence(resultFinal);
 
 	while(confidence < confidenceThreshold)
 	{
 
-		resultPrevious = result;
-		
-		for(auto it = result.begin(); it != result.end(); ++it )
+		for(auto it = resultFinal.begin(); it != resultFinal.end(); ++it )
 		{
 			label = it->first;
 			int sumMemoriesValue = 0;
 		
-
 			labelResult = memoryResult[label];
 
 			for(int i = 0; i < labelResult.size(); i++)
@@ -185,18 +192,21 @@ void WiSARD::applyBleaching(unordered_map<string, float> &result,  unordered_map
 					sumMemoriesValue += 1;
 			}
 
-			result[label] = sumMemoriesValue / numMemories;
+			resultFinal[label] = ((float) sumMemoriesValue / (float) numMemories);
 		}
 
 		// if no memory recognize the pattern, return previous value
-		float maxValue = util::maxValue(result);
-		if(maxValue <= 0.0000001)  // if is zero
+		float maxValue = util::maxValue(resultFinal);
+		
+		if(maxValue <= 0.000001)  // if is zero
 		{	
-			result = resultPrevious;
+			resultFinal = result;
 			break;
 		}
 
 		b ++;
-		confidence = util::calculateConfidence(result);
+		confidence = util::calculateConfidence(resultFinal);
 	}
+	
+	return resultFinal;
 }
