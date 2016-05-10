@@ -30,6 +30,9 @@ WiSARD(int retinaLength,
 
 
 ```c++
+
+#include <wann/WiSARD.hpp>
+
 // import and other stuffs
 
 
