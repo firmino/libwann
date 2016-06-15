@@ -23,17 +23,17 @@ util:
 
 memory:
 	@echo "COMPILING MEMORY: "
-	$(CC) -c $(SRC)/SBMemory.cpp  -o $(BUILD)/SBMemory.o $(OPTIONS) 
+	$(CC) -c $(SRC)/Memory.cpp  -o $(BUILD)/Memory.o $(OPTIONS) 
 	@echo "\n"
 	
 discriminator:
 	@echo "COMPILING DISCRIMINATOR: "
-	$(CC) -c $(SRC)/OSDiscriminator.cpp -o $(BUILD)/OSDiscriminator.o $(OPTIONS) 
+	$(CC) -c $(SRC)/Discriminator.cpp -o $(BUILD)/Discriminator.o $(OPTIONS) 
 	@echo "\n\n"
 
 wisard: 
 	@echo "COMPILING WISARD: "
-	$(CC) -c $(SRC)/OSWiSARD.cpp  -o $(BUILD)/OSWiSARD.o $(OPTIONS)
+	$(CC) -c $(SRC)/WiSARD.cpp  -o $(BUILD)/WiSARD.o $(OPTIONS)
 	@echo "\n\n"
 
 create_library: 
