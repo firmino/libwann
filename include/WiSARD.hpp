@@ -21,17 +21,19 @@ namespace wann
 	class WiSARD
 	{
 		public:
-			WiSARD(int numBitsAddr,
-				   int maxMemoryValue,
-				   float confidenceThreshold,
-				   bool randomizePositions, 
-				   bool ignoreZeroAddr);
+			WiSARD(int retinaLength, 
+				   int numBitsAddr, 
+				   bool useBleaching=true, 
+				   float confidenceThreshold=0.1, 
+				   int defaultBleaching_b=1, 
+				   bool randomizePositions=true, 
+				   bool isCummulative=true, 
+				   bool ignoreZeroAddr=false);
 
 			~WiSARD(void);
 
 			void fit(const std::vector< std::vector<int> > &, const std::vector<std::string> &);
 			std::vector<std::string> predict(const std::vector< std::vector<int> > &);
-			void onFit(const vector<int> X, const y);
 			std::vector<std::unordered_map<std::string, float>> predictProba(const std::vector<std::vector<int> > &);
 			
 		private:
