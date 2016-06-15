@@ -13,7 +13,8 @@
 using namespace std;
 using namespace wann;
 
-Memory::Memory(int numBits, 
+Memory::Memory(int numBits,
+			   int maxMemoryValue,
 			   bool isCummulative=true, 
 			   bool ignoreZeroAddr=false)
 :numBits(numBits),isCummulative(isCummulative),ignoreZeroAddr(ignoreZeroAddr)
@@ -30,7 +31,20 @@ Memory::~Memory(void)
 	data.clear();
 }
 
-void Memory::addValue(const long long addr, int value = 1)
+void Memory::addOnlineValue(const long long addr)
+{	
+	int value = maxMemoryValue;
+	if(addr < 0L || addr >= numAddrs)
+	{
+		cout << "WARNING: invalid address to add value" << endl;
+		cout << "WARNING: number of address: " << numAddrs << endl;
+		exit(-1);
+	}
+
+	data[addr] = maxMemoryValue;
+}
+
+void Memory::addValue(const long long addr, value = 1)
 {	
 	if(addr < 0L || addr >= numAddrs)
 	{
@@ -38,21 +52,15 @@ void Memory::addValue(const long long addr, int value = 1)
 		cout << "WARNING: number of address: " << numAddrs << endl;
 		exit(-1);
 	}
-	if(!isCummulative)
+
+	if(!data.count(addr))
 	{
-		data[addr] = 1;
+		data[addr] = value;
 	}
 	else
 	{
-		if(!data.count(addr))
-		{
-			data[addr] = value;
-		}
-		else
-		{
-			data[addr] += value;
-		}
-	}	
+		data[addr] += value;
+	}
 }
 
 int Memory::getValue(const long long addr)
@@ -69,4 +77,16 @@ int Memory::getValue(const long long addr)
 		return 0;
 
 	return data[addr];
+}
+
+void Memory::decrease()
+{
+	for(auto it = data.begin(); it != data.end(); ++it)
+	{
+		it->second -= 1;
+		if(it->second < 0)
+		{
+			it->second = 0;
+		}
+	}
 }

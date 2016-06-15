@@ -1,8 +1,8 @@
 /*
  * Discriminator.cpp
  *
- *  Created on: Oct 2, 2015
- *      Author: fabricio
+ *  Created on: Jul 15, 2016
+ *      Author: Fabio
  */
 
 #include "../include/WiSARD.hpp"
@@ -19,24 +19,23 @@
 using namespace wann;
 using namespace std;
 
-WiSARD::WiSARD(int numBitsAddr, 
-			   bool useBleaching, 
-			   float confidenceThreshold, 
-			   int defaultBleaching_b, 
+WiSARD::WiSARD(int numBitsAddr,
+			   int maxMemoryValue,
+			   float confidenceThreshold,
 			   bool randomizePositions, 
-			   bool isCummulative, 
 			   bool ignoreZeroAddr)
 
 :numBitsAddr(numBitsAddr),
- useBleaching(useBleaching),
+ maxMemoryValue(maxMemoryValue),
  confidenceThreshold(confidenceThreshold),
- defaultBleaching_b(defaultBleaching_b),
  randomizePositions(randomizePositions),
- isCummulative(isCummulative),
  ignoreZeroAddr(ignoreZeroAddr)
 {
 	
 	int retinaLength = 0;
+	bool useBleaching = true;
+	int defaultBleaching_b = 1;
+	bool isCummulative = true;
 	
 }
 
@@ -63,33 +62,36 @@ void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 			shuffle(begin(memoryAddressMapping), end(memoryAddressMapping), default_random_engine(seed));
 		}
 		retinaLength = vector[0].size();
+
+		// get unique labels
+		vector<string> labels;
+		unordered_map <string, int> auxMap ;
+		for(int i = 0; i < y.size(); i++)
+		{
+			auxMap[y[i]] = 0; 
+		}
+		for(auto it = auxMap.begin(); it != auxMap.end(); ++it)
+		{
+			labels.push_back(it->first);
+		}
+
+		
+		//creating discriminators
+		for(int i = 0; i < labels.size(); i++ )
+		{
+			string label = labels[i];
+		
+			Discriminator *d = new Discriminator(retinaLength,
+												 numBitsAddr, 
+												 memoryAddressMapping, 
+												 isCummulative, 
+												 ignoreZeroAddr,
+												 maxMemoryValue);
+			discriminators[label] = d;
+		}
 	}
 
-	// get unique labels
-	vector<string> labels;
-	unordered_map <string, int> auxMap ;
-	for(int i = 0; i < y.size(); i++)
-	{
-		auxMap[y[i]] = 0; 
-	}
-	for(auto it = auxMap.begin(); it != auxMap.end(); ++it)
-	{
-		labels.push_back(it->first);
-	}
 
-	
-	//creating discriminators
-	for(int i = 0; i < labels.size(); i++ )
-	{
-		string label = labels[i];
-	
-		Discriminator *d = new Discriminator(retinaLength,
-											 numBitsAddr, 
-											 memoryAddressMapping, 
-											 isCummulative, 
-											 ignoreZeroAddr);
-		discriminators[label] = d;
-	}	
 
 	//training discriminators
 	for(int i=0; i < y.size(); i++)
@@ -99,6 +101,12 @@ void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 	}	
 }
 
+void WiSARD::onFit(const vector<int> X, const y)
+{
+	
+	discriminators[y]->addOnlineTrainning(X);
+
+}
 
 vector<unordered_map<string, float>> WiSARD::predictProba(const vector< vector<int> > &X)
 {
