@@ -15,8 +15,9 @@ using namespace wann;
 
 Memory::Memory(int numBits, 
 			   bool isCummulative=true, 
-			   bool ignoreZeroAddr=false)
-:numBits(numBits),isCummulative(isCummulative),ignoreZeroAddr(ignoreZeroAddr)
+			   bool ignoreZeroAddr=false,
+			   int onlineMax = 2)
+:numBits(numBits),isCummulative(isCummulative),ignoreZeroAddr(ignoreZeroAddr),onlineMax(onlineMax)
 {
 	if(numBits > 62)
 		cout << "WARNING: Representation overflow due to number of bits" << endl;
@@ -55,6 +56,20 @@ void Memory::addValue(const long long addr, int value = 1)
 	}	
 }
 
+void Memory::addOnlineValue(const long long addr)
+{	
+	if(addr < 0L || addr >= numAddrs)
+	{
+		cout << "WARNING: invalid address to add value" << endl;
+		cout << "WARNING: number of address: " << numAddrs << endl;
+		exit(-1);
+	}
+	
+	data[addr] = onlineMax;
+	
+}
+
+
 int Memory::getValue(const long long addr)
 {
 	if(addr < 0 || addr >= numAddrs)
@@ -69,4 +84,12 @@ int Memory::getValue(const long long addr)
 		return 0;
 
 	return data[addr];
+}
+
+void Memory::decrease()
+{
+	for(auto it = data.begin(); it != data.end(); ++it)
+	{
+		it->second -= 1;
+	}
 }

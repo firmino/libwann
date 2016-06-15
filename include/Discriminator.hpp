@@ -21,14 +21,17 @@ namespace wann
 						  int numBits, 
 						  std::vector<int> memoryAddressMapping, 
 						  bool isCummulative = true, 
-						  bool ignoreZeroAddr = false);
+						  bool ignoreZeroAddr = false,
+						  int onlineMax = 2);
 
 			~Discriminator(void);
 
 			void addTrainning(const std::vector<int> &retina);
+			void addOnlineTrainning(const std::vector<int> &retina);
 			std::vector<int> predict(const std::vector<int> &retina);
 
 		private:
+			int onlineMax;
 			int retinaLength;
 			int numBitsAddr;
 			int numMemories;

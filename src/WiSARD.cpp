@@ -19,33 +19,26 @@
 using namespace wann;
 using namespace std;
 
-WiSARD::WiSARD(int retinaLength, 
-			   int numBitsAddr, 
+WiSARD::WiSARD(int numBitsAddr, 
 			   bool useBleaching, 
 			   float confidenceThreshold, 
 			   int defaultBleaching_b, 
 			   bool randomizePositions, 
 			   bool isCummulative, 
-			   bool ignoreZeroAddr)
+			   bool ignoreZeroAddr,
+			   int onlineMax)
 
-:retinaLength(retinaLength), 
- numBitsAddr(numBitsAddr),
+:numBitsAddr(numBitsAddr),
  useBleaching(useBleaching),
  confidenceThreshold(confidenceThreshold),
  defaultBleaching_b(defaultBleaching_b),
  randomizePositions(randomizePositions),
  isCummulative(isCummulative),
- ignoreZeroAddr(ignoreZeroAddr)
+ ignoreZeroAddr(ignoreZeroAddr),
+ onlineMax(onlineMax)
 {
 	
-	for(int i=0; i < retinaLength; i++)
-		memoryAddressMapping.push_back(i);
-
-	if(randomizePositions)
-	{	
-		seed = chrono::system_clock::now().time_since_epoch().count();
-		shuffle(begin(memoryAddressMapping), end(memoryAddressMapping), default_random_engine(seed));
-	}
+	int retinaLength = 0;
 	
 }
 
@@ -60,38 +53,105 @@ WiSARD::~WiSARD(void)
 
 void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
+	if(retinaLength == 0)
+	{
+		for(int i=0; i < retinaLength; i++)
+		memoryAddressMapping.push_back(i);
 
-	// get unique labels
-	vector<string> labels;
-	unordered_map <string, int> auxMap ;
-	for(int i = 0; i < y.size(); i++)
-	{
-		auxMap[y[i]] = 0; 
-	}
-	for(auto it = auxMap.begin(); it != auxMap.end(); ++it)
-	{
-		labels.push_back(it->first);
-	}
+		if(randomizePositions)
+		{	
+			seed = chrono::system_clock::now().time_since_epoch().count();
+			shuffle(begin(memoryAddressMapping), end(memoryAddressMapping), default_random_engine(seed));
+		}
 
-	
-	//creating discriminators
-	for(int i = 0; i < labels.size(); i++ )
-	{
-		string label = labels[i];
-	
-		Discriminator *d = new Discriminator(retinaLength,
-											 numBitsAddr, 
-											 memoryAddressMapping, 
-											 isCummulative, 
-											 ignoreZeroAddr);
-		discriminators[label] = d;
-	}	
+		// get unique labels
+		vector<string> labels;
+		unordered_map <string, int> auxMap ;
+		for(int i = 0; i < y.size(); i++)
+		{
+			auxMap[y[i]] = 0; 
+		}
+		for(auto it = auxMap.begin(); it != auxMap.end(); ++it)
+		{
+			labels.push_back(it->first);
+		}
+
+		
+		//creating discriminators
+		for(int i = 0; i < labels.size(); i++ )
+		{
+			string label = labels[i];
+		
+			Discriminator *d = new Discriminator(retinaLength,
+												 numBitsAddr, 
+												 memoryAddressMapping, 
+												 isCummulative, 
+												 ignoreZeroAddr,
+												 onlineMax);
+			discriminators[label] = d;
+		}
+	}
+	retinaLength = X[0].size();
+
+		
 
 	//training discriminators
 	for(int i=0; i < y.size(); i++)
 	{
 		string label = y[i];
 		discriminators[label]->addTrainning(X[i]);
+	}	
+}
+
+void WiSARD::onFit(const vector< vector<int> > &X, const vector<string> &y)
+{
+	if(retinaLength == 0)
+	{
+		for(int i=0; i < retinaLength; i++)
+		memoryAddressMapping.push_back(i);
+
+		if(randomizePositions)
+		{	
+			seed = chrono::system_clock::now().time_since_epoch().count();
+			shuffle(begin(memoryAddressMapping), end(memoryAddressMapping), default_random_engine(seed));
+		}
+
+		// get unique labels
+		vector<string> labels;
+		unordered_map <string, int> auxMap ;
+		for(int i = 0; i < y.size(); i++)
+		{
+			auxMap[y[i]] = 0; 
+		}
+		for(auto it = auxMap.begin(); it != auxMap.end(); ++it)
+		{
+			labels.push_back(it->first);
+		}
+
+		
+		//creating discriminators
+		for(int i = 0; i < labels.size(); i++ )
+		{
+			string label = labels[i];
+		
+			Discriminator *d = new Discriminator(retinaLength,
+												 numBitsAddr, 
+												 memoryAddressMapping, 
+												 isCummulative, 
+												 ignoreZeroAddr,
+												 onlineMax);
+			discriminators[label] = d;
+		}
+	}
+	retinaLength = X[0].size();
+
+		
+
+	//training discriminators
+	for(int i=0; i < y.size(); i++)
+	{
+		string label = y[i];
+		discriminators[label]->addOnlineTrainning(X[i]);
 	}	
 }
 
