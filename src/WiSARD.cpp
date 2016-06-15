@@ -19,8 +19,7 @@
 using namespace wann;
 using namespace std;
 
-WiSARD::WiSARD(int retinaLength, 
-			   int numBitsAddr, 
+WiSARD::WiSARD(int numBitsAddr, 
 			   bool useBleaching, 
 			   float confidenceThreshold, 
 			   int defaultBleaching_b, 
@@ -28,8 +27,7 @@ WiSARD::WiSARD(int retinaLength,
 			   bool isCummulative, 
 			   bool ignoreZeroAddr)
 
-:retinaLength(retinaLength), 
- numBitsAddr(numBitsAddr),
+:numBitsAddr(numBitsAddr),
  useBleaching(useBleaching),
  confidenceThreshold(confidenceThreshold),
  defaultBleaching_b(defaultBleaching_b),
@@ -38,14 +36,7 @@ WiSARD::WiSARD(int retinaLength,
  ignoreZeroAddr(ignoreZeroAddr)
 {
 	
-	for(int i=0; i < retinaLength; i++)
-		memoryAddressMapping.push_back(i);
-
-	if(randomizePositions)
-	{	
-		seed = chrono::system_clock::now().time_since_epoch().count();
-		shuffle(begin(memoryAddressMapping), end(memoryAddressMapping), default_random_engine(seed));
-	}
+	int retinaLength = 0
 	
 }
 
@@ -60,6 +51,19 @@ WiSARD::~WiSARD(void)
 
 void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
+
+	//calculating the memory mapping
+	if(retinaLength == 0){
+		for(int i=0; i < retinaLength; i++)
+			memoryAddressMapping.push_back(i);
+
+		if(randomizePositions)
+		{	
+			seed = chrono::system_clock::now().time_since_epoch().count();
+			shuffle(begin(memoryAddressMapping), end(memoryAddressMapping), default_random_engine(seed));
+		}
+		retinaLength = vector[0].size()
+	}
 
 	// get unique labels
 	vector<string> labels;
