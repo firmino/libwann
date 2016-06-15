@@ -37,6 +37,7 @@ WiSARD::WiSARD(int numBitsAddr,
 {
 	
 	int retinaLength = 0;
+	useBleaching = 1;
 	
 }
 
