@@ -18,14 +18,16 @@ namespace wann
 	{
 		public:
 			Discriminator(int retinaLength, 
-						  int numBits, 
-						  std::vector<int> memoryAddressMapping, 
-						  bool isCummulative = true, 
-						  bool ignoreZeroAddr = false);
+                          int numBits,
+                          vector<int> memoryAddressMapping, 
+                          bool isCummulative, 
+                          bool ignoreZeroAddr,
+                          int maxMemoryValue);
 
 			~Discriminator(void);
 
 			void addTrainning(const std::vector<int> &retina);
+			void addOnlineTrainning(const vector<int> &retina);
 			std::vector<int> predict(const std::vector<int> &retina);
 
 		private:

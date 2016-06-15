@@ -17,11 +17,16 @@ namespace wann
 	class Memory
 	{
 		public:
-			Memory(int numBits, bool isCummulative, bool ignoreZeroAddr);
+			Memory(int numBits,
+				   int maxMemoryValue,
+				   bool isCummulative=true, 
+				   bool ignoreZeroAddr=false);
 			~Memory(void);
 			
 			void addValue(const long long addr, int value);
+			void addOnlineValue(const long long addr);
 			int getValue(const long long addr);
+			void decrease();
 
 		private:
 			std::unordered_map<long long, int> data;
