@@ -25,7 +25,7 @@ namespace wann
 			int getValue(const long long addr);
 			void decrease();
 
-		private:
+		// private:
 			std::unordered_map<long long, int> data;
 			long long numAddrs;
 			int numBits;

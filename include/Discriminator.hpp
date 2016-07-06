@@ -30,7 +30,7 @@ namespace wann
 			void addOnlineTrainning(const std::vector<int> &retina);
 			std::vector<int> predict(const std::vector<int> &retina);
 
-		private:
+		// private:
 			int onlineMax;
 			int retinaLength;
 			int numBitsAddr;

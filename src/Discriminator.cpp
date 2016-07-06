@@ -29,6 +29,7 @@ Discriminator::Discriminator(int retinaLength,
 {
 
     numMemories = (int) ceil(((float)retinaLength)/(float)numBits);
+
     bool hasRestMemory = ((retinaLength % numBits) > 0) ? true : false;
 
     if(!hasRestMemory)
@@ -122,7 +123,7 @@ void Discriminator::addOnlineTrainning(const vector<int> &retina)
         }
         memIndex = (int) ( i / numBitsAddr);
         memories[memIndex]->decrease();
-        memories[memIndex]->addValue(addr, onlineMax);
+        memories[memIndex]->addOnlineValue(addr);
 
     }
     //  the rest of the retina (when the retina length is not a multiple of number of bits of address)
@@ -140,7 +141,7 @@ void Discriminator::addOnlineTrainning(const vector<int> &retina)
         }
         lastMemoryPosition = memIndex + 1;
         memories[memIndex]->decrease();
-        memories[lastMemoryPosition]->addValue(addr, onlineMax);
+        memories[lastMemoryPosition]->addOnlineValue(addr);
     }
 }
 

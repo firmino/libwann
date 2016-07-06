@@ -55,6 +55,8 @@ void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
 	if(retinaLength == 0)
 	{
+		retinaLength = X[0].size();
+
 		for(int i=0; i < retinaLength; i++)
 		memoryAddressMapping.push_back(i);
 
@@ -75,7 +77,6 @@ void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 		{
 			labels.push_back(it->first);
 		}
-
 		
 		//creating discriminators
 		for(int i = 0; i < labels.size(); i++ )
@@ -91,7 +92,7 @@ void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 			discriminators[label] = d;
 		}
 	}
-	retinaLength = X[0].size();
+	
 
 		
 
@@ -107,6 +108,8 @@ void WiSARD::onFit(const vector< vector<int> > &X, const vector<string> &y)
 {
 	if(retinaLength == 0)
 	{
+		retinaLength = X[0].size();
+
 		for(int i=0; i < retinaLength; i++)
 		memoryAddressMapping.push_back(i);
 
@@ -144,8 +147,6 @@ void WiSARD::onFit(const vector< vector<int> > &X, const vector<string> &y)
 		}
 	}
 	retinaLength = X[0].size();
-
-		
 
 	//training discriminators
 	for(int i=0; i < y.size(); i++)

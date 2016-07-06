@@ -37,7 +37,7 @@ namespace wann
 			std::vector<std::string> predict(const std::vector< std::vector<int> > &);
 			std::vector<std::unordered_map<std::string, float>> predictProba(const std::vector<std::vector<int> > &);
 			
-		private:
+		// private:
 			int retinaLength;
 			int onlineMax;
 			int numBitsAddr;
