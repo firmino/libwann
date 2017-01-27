@@ -19,12 +19,12 @@
 using namespace wann;
 using namespace std;
 
-WiSARD::WiSARD(int numBitsAddr, 
-			   bool useBleaching, 
-			   float confidenceThreshold, 
-			   int defaultBleaching_b, 
-			   bool randomizePositions, 
-			   bool isCummulative, 
+WiSARD::WiSARD(int numBitsAddr,
+			   bool useBleaching,
+			   float confidenceThreshold,
+			   int defaultBleaching_b,
+			   bool randomizePositions,
+			   bool isCummulative,
 			   bool ignoreZeroAddr,
 			   int onlineMax)
 
@@ -37,9 +37,7 @@ WiSARD::WiSARD(int numBitsAddr,
  ignoreZeroAddr(ignoreZeroAddr),
  onlineMax(onlineMax)
 {
-	
-	int retinaLength = 0;
-	
+
 }
 
 WiSARD::~WiSARD(void)
@@ -53,55 +51,59 @@ WiSARD::~WiSARD(void)
 
 void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
+	std::cout << "/* message */ 1" << '\n';
+	std::cout << retinaLength << '\n';
+
 	if(retinaLength == 0)
 	{
+		std::cout << "/* message */ 2" << '\n';
 		retinaLength = X[0].size();
 
 		for(int i=0; i < retinaLength; i++)
 		memoryAddressMapping.push_back(i);
 
 		if(randomizePositions)
-		{	
+		{
 			seed = chrono::system_clock::now().time_since_epoch().count();
 			shuffle(begin(memoryAddressMapping), end(memoryAddressMapping), default_random_engine(seed));
 		}
-
+		std::cout << "/* message */ 3" << '\n';
 		// get unique labels
 		vector<string> labels;
 		unordered_map <string, int> auxMap ;
 		for(int i = 0; i < y.size(); i++)
 		{
-			auxMap[y[i]] = 0; 
+			auxMap[y[i]] = 0;
 		}
 		for(auto it = auxMap.begin(); it != auxMap.end(); ++it)
 		{
 			labels.push_back(it->first);
 		}
-		
+
 		//creating discriminators
 		for(int i = 0; i < labels.size(); i++ )
 		{
 			string label = labels[i];
-		
+
 			Discriminator *d = new Discriminator(retinaLength,
-												 numBitsAddr, 
-												 memoryAddressMapping, 
-												 isCummulative, 
+												 numBitsAddr,
+												 memoryAddressMapping,
+												 isCummulative,
 												 ignoreZeroAddr,
 												 onlineMax);
 			discriminators[label] = d;
 		}
 	}
-	
 
-		
+
+
 
 	//training discriminators
 	for(int i=0; i < y.size(); i++)
 	{
 		string label = y[i];
 		discriminators[label]->addTrainning(X[i]);
-	}	
+	}
 }
 
 void WiSARD::onFit(const vector< vector<int> > &X, const vector<string> &y)
@@ -114,7 +116,7 @@ void WiSARD::onFit(const vector< vector<int> > &X, const vector<string> &y)
 		memoryAddressMapping.push_back(i);
 
 		if(randomizePositions)
-		{	
+		{
 			seed = chrono::system_clock::now().time_since_epoch().count();
 			shuffle(begin(memoryAddressMapping), end(memoryAddressMapping), default_random_engine(seed));
 		}
@@ -124,23 +126,23 @@ void WiSARD::onFit(const vector< vector<int> > &X, const vector<string> &y)
 		unordered_map <string, int> auxMap ;
 		for(int i = 0; i < y.size(); i++)
 		{
-			auxMap[y[i]] = 0; 
+			auxMap[y[i]] = 0;
 		}
 		for(auto it = auxMap.begin(); it != auxMap.end(); ++it)
 		{
 			labels.push_back(it->first);
 		}
 
-		
+
 		//creating discriminators
 		for(int i = 0; i < labels.size(); i++ )
 		{
 			string label = labels[i];
-		
+
 			Discriminator *d = new Discriminator(retinaLength,
-												 numBitsAddr, 
-												 memoryAddressMapping, 
-												 isCummulative, 
+												 numBitsAddr,
+												 memoryAddressMapping,
+												 isCummulative,
 												 ignoreZeroAddr,
 												 onlineMax);
 			discriminators[label] = d;
@@ -153,7 +155,7 @@ void WiSARD::onFit(const vector< vector<int> > &X, const vector<string> &y)
 	{
 		string label = y[i];
 		discriminators[label]->addOnlineTrainning(X[i]);
-	}	
+	}
 }
 
 
@@ -183,7 +185,7 @@ vector<unordered_map<string, float>> WiSARD::predictProba(const vector< vector<i
 			auxDisc = it->second;
 
 			memoryResultAux = auxDisc->predict(retina);
-		
+
 			int sumMemoriesValue = 0;
 			for(int i = 0; i < memoryResultAux.size(); i++)
 			{
@@ -195,16 +197,16 @@ vector<unordered_map<string, float>> WiSARD::predictProba(const vector< vector<i
 			result[label] = (float)sumMemoriesValue / (float)numMemories;
 			memoryResult[label] = memoryResultAux;
 		}
-		
+
 
 		if(useBleaching)
 			result = WiSARD::applyBleaching(result, memoryResult);
 
 		results.push_back(result);
-	}	
+	}
 
 	return results;
-} 
+}
 
 
 vector<string> WiSARD::predict(const vector< vector<int> > &X)
@@ -233,7 +235,7 @@ unordered_map<string, float> WiSARD::applyBleaching(unordered_map<string, float>
 	string label;
 	int b = defaultBleaching_b;
 	int numMemories = (int) ceil( (float)retinaLength/ (float) numBitsAddr );
-	
+
 
 	float confidence = util::calculateConfidence(resultFinal);
 
@@ -244,7 +246,7 @@ unordered_map<string, float> WiSARD::applyBleaching(unordered_map<string, float>
 		{
 			label = it->first;
 			int sumMemoriesValue = 0;
-		
+
 			labelResult = memoryResult[label];
 
 			for(int i = 0; i < labelResult.size(); i++)
@@ -258,9 +260,9 @@ unordered_map<string, float> WiSARD::applyBleaching(unordered_map<string, float>
 
 		// if no memory recognize the pattern, return previous value
 		float maxValue = util::maxValue(resultFinal);
-		
+
 		if(maxValue <= 0.000001)  // if is zero
-		{	
+		{
 			resultFinal = result;
 			break;
 		}
@@ -268,6 +270,6 @@ unordered_map<string, float> WiSARD::applyBleaching(unordered_map<string, float>
 		b ++;
 		confidence = util::calculateConfidence(resultFinal);
 	}
-	
+
 	return resultFinal;
 }
