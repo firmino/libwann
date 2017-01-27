@@ -51,8 +51,6 @@ WiSARD::~WiSARD(void)
 
 void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
-	std::cout << retinaLength << '\n';
-
 	if(retinaLength == 0)
 	{
 		retinaLength = X[0].size();
