@@ -51,12 +51,10 @@ WiSARD::~WiSARD(void)
 
 void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 {
-	std::cout << "/* message */ 1" << '\n';
 	std::cout << retinaLength << '\n';
 
 	if(retinaLength == 0)
 	{
-		std::cout << "/* message */ 2" << '\n';
 		retinaLength = X[0].size();
 
 		for(int i=0; i < retinaLength; i++)
@@ -67,7 +65,6 @@ void WiSARD::fit(const vector< vector<int> > &X, const vector<string> &y)
 			seed = chrono::system_clock::now().time_since_epoch().count();
 			shuffle(begin(memoryAddressMapping), end(memoryAddressMapping), default_random_engine(seed));
 		}
-		std::cout << "/* message */ 3" << '\n';
 		// get unique labels
 		vector<string> labels;
 		unordered_map <string, int> auxMap ;
